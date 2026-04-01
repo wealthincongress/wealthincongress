@@ -11,8 +11,8 @@ Wealth in Congress (wealthincongress.com) tracks all 540 members of the 119th U.
 - 540 members tracked (119th Congress)
 - 509 members with gain data (entry ≠ current net worth)
 - 402 members with calculable percentage returns (entry NW > $0)
-- Only 28% of members with comparable data beat the S&P 500 on an annualized basis
-- Median member trails the S&P 500 benchmark by ~5.6 percentage points per year
+- About half of members with 2+ years in office match or beat the S&P 500 on an annualized basis
+- The median veteran member roughly tracks the benchmark
 - Both parties show comparable wealth growth patterns
 - 39 members with STOCK Act transaction data
 - 511 members with FEC campaign finance data
