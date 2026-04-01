@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://wealthincongress.com/sitemap.xml

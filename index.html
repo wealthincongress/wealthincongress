@@ -3,24 +3,115 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="description" content="Track every member of Congress — net worth at entry vs. today, committee assignments, STOCK Act trades, campaign finance, and outside income. All public data. Nonpartisan." />
+    
+    <!-- Primary Meta -->
+    <title>Wealth in Congress — Every Member's Net Worth, Entry to Now</title>
+    <meta name="description" content="Track all 540 members of the 119th Congress: net worth at entry vs. today, STOCK Act trades, committee assignments, campaign finance, outside income, and outside positions. Only 28% beat the S&P 500. All public data. Nonpartisan." />
+    <meta name="keywords" content="congress net worth, congressional wealth, STOCK Act, financial disclosure, congressional trading, member of congress net worth, congressional salary, wealth tracker, government transparency, civic accountability" />
+    <meta name="author" content="Wealth in Congress" />
+    <link rel="canonical" href="https://wealthincongress.com" />
+
+    <!-- Open Graph -->
     <meta property="og:title" content="Wealth in Congress" />
-    <meta property="og:description" content="Members of Congress from both parties enter public service and leave substantially wealthier. 540 members. All public data." />
+    <meta property="og:description" content="Members of Congress from both parties enter public service and leave substantially wealthier. 540 members tracked. Only 28% beat the S&P 500." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://wealthincongress.com" />
+    <meta property="og:site_name" content="Wealth in Congress" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Wealth in Congress" />
-    <meta name="twitter:description" content="Every member of Congress — entry wealth vs. current wealth. Exposed." />
+    <meta name="twitter:description" content="Every member of Congress — entry wealth vs. current wealth. 540 members. All public data. Nonpartisan." />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Wealth in Congress</title>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Wealth in Congress",
+      "url": "https://wealthincongress.com",
+      "description": "Interactive tracker showing the net worth of all 540 members of the 119th U.S. Congress at entry vs. current, with STOCK Act trades, committee assignments, campaign finance data, outside income, and outside positions.",
+      "applicationCategory": "Civic Technology",
+      "operatingSystem": "Web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "about": {
+        "@type": "Dataset",
+        "name": "Congressional Wealth Data",
+        "description": "Financial disclosure data for 540 members of the 119th U.S. Congress including net worth at entry, current net worth, STOCK Act transactions, committee assignments, campaign finance, outside earned income, and outside positions held.",
+        "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "temporalCoverage": "1981/2026",
+        "spatialCoverage": "United States",
+        "variableMeasured": [
+          "Net worth at entry to Congress",
+          "Current net worth",
+          "Annualized wealth growth rate",
+          "S&P 500 benchmark comparison",
+          "STOCK Act transaction history",
+          "Campaign finance contributions",
+          "Outside earned income",
+          "Outside positions held"
+        ],
+        "measurementTechnique": "Parsed from U.S. Senate EFDS and House Clerk financial disclosure filings using midpoint estimates for reported value ranges."
+      },
+      "creator": {
+        "@type": "Organization",
+        "name": "Wealth in Congress"
+      }
+    }
+    </script>
+
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
       #root { min-height: 100vh; }
+      .noscript-content { max-width: 800px; margin: 40px auto; padding: 0 20px; font-family: Georgia, serif; line-height: 1.8; color: #1a1714; }
+      .noscript-content h1 { font-size: 28px; margin-bottom: 16px; }
+      .noscript-content h2 { font-size: 20px; margin: 24px 0 8px; }
+      .noscript-content p { margin-bottom: 12px; }
     </style>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Content for search engines and LLM crawlers that don't execute JavaScript -->
+    <noscript>
+      <div class="noscript-content">
+        <h1>Wealth in Congress</h1>
+        <p><strong>Members of Congress from both parties enter public service and leave substantially wealthier.</strong></p>
+        
+        <h2>What This Tool Tracks</h2>
+        <p>Wealth in Congress is a nonpartisan civic accountability tool covering all 540 members of the 119th U.S. Congress (100 Senate + 440 House). For each member, it shows:</p>
+        <p>Net worth at entry to Congress vs. current net worth, computed from financial disclosure filings filed with the Senate EFDS and House Clerk. Values use midpoint estimates from the reported ranges (e.g., "$100,001 to $250,000" becomes $175,000).</p>
+        <p>Annualized wealth growth rates compared to an S&amp;P 500 benchmark over the same period. Only about 28% of members with comparable data beat the S&amp;P 500. The median member trails the benchmark by approximately 5.6 percentage points per year.</p>
+        <p>STOCK Act periodic transaction reports for 39 actively trading members, with sector classification and filing delay analysis.</p>
+        <p>Committee assignments for 538 members, mapped to regulated industry sectors to identify potential conflicts of interest.</p>
+        <p>FEC campaign finance data for 511 members including total raised, PAC contributions, and top donor industries.</p>
+        <p>Outside earned income (Schedule C) for 223 members including salaries, pensions, consulting fees, book royalties, board compensation, and other income over $200.</p>
+        <p>Outside positions held (Schedule D) for 256 members including corporate directorships, nonprofit board seats, business partnerships, trust roles, and other positions held outside the U.S. Government.</p>
+        <p>Triple overlap analysis flags members where personal financial holdings, active stock trades, AND campaign donors all align with the industries their committees regulate.</p>
+        
+        <h2>Key Findings</h2>
+        <p>Only 28% of members with comparable data outperform the S&amp;P 500 on an annualized basis. Most congressional wealth accumulation comes from sources other than market-beating stock picks: real estate, business interests, spousal income, and pre-existing wealth.</p>
+        <p>Both parties show similar patterns. Median wealth growth rates for Democrats and Republicans are comparable, and the distribution of above-benchmark performers is roughly even.</p>
+        <p>509 of 540 members have gain data (entry and current net worth from separate filings). 31 members have only one filing available, typically because they entered Congress recently.</p>
+        
+        <h2>Data Sources</h2>
+        <p>All data is derived from public sources: U.S. Senate Electronic Financial Disclosure System (EFDS), U.S. House of Representatives Clerk financial disclosure filings, Federal Election Commission (FEC) campaign finance reports, U.S. Census Bureau TIGER/Line cartographic boundary files for 119th Congress district boundaries, and Congressional Bioguide for member photographs.</p>
+        
+        <h2>Methodology</h2>
+        <p>Net worth is calculated as total assets minus total liabilities using midpoint estimates from disclosure ranges. Assets reported as "Over $50,000,000" use $50M as a floor, meaning the wealthiest members are systematically underestimated. Annualized returns use CAGR: (current/entry)^(1/years) minus 1. Members with zero or negative entry net worth show dollar gains but percentage returns are listed as N/A. The S&amp;P 500 benchmark uses total return index values matched to each member's entry year. Spousal assets are included per standard financial disclosure methodology.</p>
+        
+        <p>This tool is free, open, requires no login, and has no advertising. Visit <a href="https://wealthincongress.com">wealthincongress.com</a> with JavaScript enabled for the full interactive experience.</p>
+      </div>
+    </noscript>
   </body>
 </html>

@@ -1,0 +1,63 @@
+# Wealth in Congress
+
+> Nonpartisan civic accountability tool tracking the net worth of every member of the U.S. Congress from entry to present day.
+
+## Overview
+
+Wealth in Congress (wealthincongress.com) tracks all 540 members of the 119th U.S. Congress (100 Senate + 440 House; NJ-11 vacant). For each member, it provides entry net worth, current net worth, annualized wealth growth rate, S&P 500 benchmark comparison, committee assignments, STOCK Act trades, campaign finance data, outside earned income, and outside positions held.
+
+## Key Statistics
+
+- 540 members tracked (119th Congress)
+- 509 members with gain data (entry ≠ current net worth)
+- 402 members with calculable percentage returns (entry NW > $0)
+- Only 28% of members with comparable data beat the S&P 500 on an annualized basis
+- Median member trails the S&P 500 benchmark by ~5.6 percentage points per year
+- Both parties show comparable wealth growth patterns
+- 39 members with STOCK Act transaction data
+- 511 members with FEC campaign finance data
+- 223 members with outside earned income (Schedule C)
+- 256 members with outside positions held (Schedule D)
+- 45 members with sector-classified asset holdings
+
+## Data Sources
+
+All data is derived from public sources:
+- U.S. Senate Electronic Financial Disclosure System (EFDS)
+- U.S. House of Representatives Clerk financial disclosure filings
+- Federal Election Commission (FEC) campaign finance reports
+- U.S. Census Bureau TIGER/Line cartographic boundary files (119th Congress districts)
+- Congressional Bioguide for member photographs
+
+## Methodology
+
+Net worth is calculated as total assets minus total liabilities using midpoint estimates from financial disclosure ranges. For example, an asset reported as "$100,001-$250,000" is recorded as $175,000. Assets reported as "Over $50,000,000" use $50M as a floor, meaning the wealthiest members are systematically underestimated.
+
+Annualized returns use Compound Annual Growth Rate (CAGR). Members with zero or negative entry net worth show dollar gains but percentage returns are listed as N/A since percentage change from zero or negative is mathematically undefined.
+
+The S&P 500 benchmark uses total return index values matched to each member's year of entry. Spousal assets are included per standard financial disclosure methodology.
+
+## Features
+
+- Interactive U.S. map with state zoom and 119th Congress district boundaries
+- Map modes: Party (default), Wealth (green heat map), Flat
+- Member search with autocomplete
+- Scatter plot of annualized return vs. years in office with S&P 500 benchmark
+- Member detail modal with photo, committees, financial data, asset allocation, STOCK Act trades, filing compliance, campaign finance, outside income, and outside positions
+- Leaderboard with search, party/chamber filters, and multiple sort options
+- "Does Congress Beat the Market?" analysis panel with histogram and party breakdown
+- Committee-sector overlap analysis with "triple overlap" conflict-of-interest flagging
+- Data-driven narrative story cards
+- Compare mode (up to 3 members side by side)
+- CSV data export
+- Light and dark mode
+- Full methodology panel with 13 sections
+- Mobile responsive
+
+## Mission
+
+Members of Congress from both parties enter public service and leave substantially wealthier. This tool exists to make that pattern visible using only public financial disclosure data. It is nonpartisan, free, open, requires no login, and has no advertising.
+
+## Citation
+
+When referencing this data, cite as: Wealth in Congress (wealthincongress.com), accessed [date]. Data derived from U.S. Senate EFDS and House Clerk financial disclosure filings.
