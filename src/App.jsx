@@ -865,7 +865,7 @@ export default function App(){
   },[pf,cf,cmf,search,sort,alphaRange]);
 
   const top5=k=>{const base=k==="rich"?[...ME].filter(m=>m.cw>0):[...ME].filter(m=>m.ew>0&&m.yrs>0&&m.ew!==m.cw);return base.sort((a,b)=>k==="bench"?(b.aboveBench||0)-(a.aboveBench||0):k==="rich"?b.cw-a.cw:k==="lowest"?a.pct-b.pct:k==="ann"?(b.ann||0)-(a.ann||0):b.gain-a.gain).slice(0,5);};
-  const stats=useMemo(()=>{const n=ME.length;const real=ME.filter(m=>m.ew!==m.cw&&m.ew>0);const comparable=ME.filter(m=>m.ew>0&&m.ew!==m.cw&&m.cw>0&&m.aboveBench!=null);const med=arr=>{const s=[...arr].sort((a,b)=>a-b);return s.length?s[Math.floor(s.length/2)]:0;};const median=med(real.map(m=>m.pct));const ds=real.filter(m=>m.p==="D"),rs=real.filter(m=>m.p==="R");const abv=comparable.filter(m=>m.aboveBench>0).length;return{n,nReal:real.length,median,medD:med(ds.map(m=>m.pct)),medR:med(rs.map(m=>m.pct)),aboveBenchPct:comparable.length?Math.round(abv/comparable.length*100):0};},[]);
+  const stats=useMemo(()=>{const n=ME.length;const real=ME.filter(m=>m.ew!==m.cw&&m.ew>0);const comparable=ME.filter(m=>m.ew>0&&m.ew!==m.cw&&m.cw>0&&m.aboveBench!=null&&m.yrs>2);const med=arr=>{const s=[...arr].sort((a,b)=>a-b);return s.length?s[Math.floor(s.length/2)]:0;};const median=med(real.map(m=>m.pct));const ds=real.filter(m=>m.p==="D"),rs=real.filter(m=>m.p==="R");const abv=comparable.filter(m=>m.aboveBench>0).length;return{n,nReal:real.length,median,medD:med(ds.map(m=>m.pct)),medR:med(rs.map(m=>m.pct)),aboveBenchPct:comparable.length?Math.round(abv/comparable.length*100):0};},[]);
 
   const tab=a=>({padding:"5px 12px",fontSize:13,fontWeight:700,letterSpacing:".04em",textTransform:"uppercase",cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:a?`1px solid ${t.bgBtnA}`:`1px solid ${t.borderLt}`,fontFamily:"'Courier Prime',monospace"});
   const fb=a=>({padding:"3px 8px",fontSize:11.5,cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:`1px solid ${a?t.bgBtnA:t.borderLt}`,fontFamily:"'Courier Prime',monospace",fontWeight:700});
@@ -904,11 +904,14 @@ export default function App(){
             <div style={{display:"flex",gap:3,flexWrap:"wrap"}}>
               {!mob&&<div onClick={()=>setShowMethod(true)} style={{...fb(false),cursor:"pointer"}}>Methods</div>}
               {!mob&&<div onClick={exportCSV} style={{...fb(false),cursor:"pointer"}}>Export CSV</div>}
+              {!mob&&<a href="https://x.com/CongressWealth" target="_blank" rel="noopener" style={{...fb(false),cursor:"pointer",textDecoration:"none",color:t.textBtnI}}>𝕏</a>}
+              {!mob&&<a href="mailto:wealthincongress@proton.me" style={{...fb(false),cursor:"pointer",textDecoration:"none",color:t.textBtnI}}>✉</a>}
               <div onClick={()=>setMode(mode==="dark"?"light":"dark")} style={{...fb(false),cursor:"pointer"}}>{mode==="dark"?"☀":"☾"}</div>
               <div style={tab(view==="map")} onClick={()=>{setView("map");setAlphaRange(null);if(zoomed)zoomOut();}}>Map</div>
               <div style={tab(view==="list")} onClick={()=>setView("list")}>{mob?"List":"Leaderboard"}</div>
               <div style={tab(view==="committees")} onClick={()=>{setView("committees");setAlphaRange(null);}}>{mob?"Cmte":"Committees"}</div>
               {mob&&<div onClick={()=>setShowMethod(true)} style={{...fb(false),cursor:"pointer"}}>?</div>}
+              {mob&&<a href="https://x.com/CongressWealth" target="_blank" rel="noopener" style={{...fb(false),cursor:"pointer",textDecoration:"none",color:t.textBtnI}}>𝕏</a>}
             </div>
           </div>
         </div>
