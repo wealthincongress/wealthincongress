@@ -607,14 +607,14 @@ function MemberDetail({m,onClose,onCompare,comparing}){const t=useT();
   const items=[["State",SN[m.s]||m.s],["Chamber",m.ch==="S"?"U.S. Senate":m.d?"U.S. House, Dist. "+m.d:"U.S. House"],["Party",m.p==="D"?"Democrat":m.p==="R"?"Republican":"Independent"],["Entered",m.y],["Years",m.yrs],["Entry Net Worth",fmt(m.ew)],["Current Net Worth",fmt(m.cw)],["Total Gain",noGain?"--":fmt(m.gain)],["Total %",noGain?"--":m.noPct?"N/A":(m.pct>=0?"+":"")+m.pct.toFixed(1)+"%"],["Annualized",noGain?"--":m.noPct?"N/A":m.ann!=null?m.ann.toFixed(1)+"%/yr":"N/A"],["S&P Benchmark",m.bench.toFixed(1)+"%/yr"],["vs. Benchmark",noGain?"--":m.noPct?"N/A":m.aboveBench!=null?(m.aboveBench>=0?"+":"")+m.aboveBench.toFixed(1)+" pp":"N/A"],["If S&P Only",benchW?fmt(benchW):"--"],["Salary-Years",noGain?"--":m.gain>0?m.salYrs.toFixed(1)+" years":"--"],["Wealth Source",m.nt||"--"]];
   return(<div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:t.mob?"flex-end":"center",justifyContent:"center",background:t.bgModalOv,backdropFilter:"blur(4px)"}} onClick={onClose}><div style={{background:t.bgModal,border:t.mob?"none":`1px solid ${t.border}`,borderRadius:t.mob?"12px 12px 0 0":10,padding:t.mob?"18px 16px 24px":"24px 28px",maxWidth:t.mob?"100%":460,width:t.mob?"100%":"92%",maxHeight:t.mob?"92vh":"85vh",overflowY:"auto",fontFamily:"'Courier Prime',monospace",color:t.text}} onClick={e=>e.stopPropagation()}>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:t.mob?10:14}}>
-      <div style={{display:"flex",alignItems:"center",gap:8}}>{m.bg&&<img src={`https://bioguide.congress.gov/bioguide/photo/${m.bg[0]}/${m.bg}.jpg`} style={{width:t.mob?40:48,height:t.mob?40:48,borderRadius:"50%",objectFit:"cover",border:`2px solid ${pClr(t,m.p)}`,flexShrink:0}} onError={e=>{e.target.style.display="none";}}/>}<div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:t.mob?18:22,fontWeight:900,color:t.heading}}>{m.nm}</div>{m.cm&&<div style={{fontSize:11,color:t.text3,marginTop:2,lineHeight:1.5}}>{m.cm.split(";").join(" · ")}</div>}</div></div>
-      <div style={{display:"flex",gap:6}}>{onCompare&&<div onClick={e=>{e.stopPropagation();onCompare(m);}} style={{cursor:"pointer",padding:"4px 10px",borderRadius:4,background:comparing?t.loss:t.bgAlt,color:comparing?t.textOnBtn:t.text2,fontSize:12,fontWeight:700,border:`1px solid ${t.border}`}}>{comparing?"Remove":"Compare"}</div>}<div onClick={onClose} style={{cursor:"pointer",width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:t.bgAlt,color:t.text2,fontSize:16,border:`1px solid ${t.border}`}}>×</div></div>
+      <div style={{display:"flex",alignItems:"center",gap:8}}>{m.bg&&<img src={`https://bioguide.congress.gov/bioguide/photo/${m.bg[0]}/${m.bg}.jpg`} style={{width:t.mob?40:48,height:t.mob?40:48,borderRadius:"50%",objectFit:"cover",border:`2px solid ${pClr(t,m.p)}`,flexShrink:0}} onError={e=>{e.target.style.display="none";}}/>}<div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:t.mob?18:22,fontWeight:900,color:t.heading}}>{m.nm}</div>{m.cm&&<div style={{fontSize:13,color:t.text3,marginTop:2,lineHeight:1.5}}>{m.cm.split(";").join(" · ")}</div>}</div></div>
+      <div style={{display:"flex",gap:6}}>{onCompare&&<div onClick={e=>{e.stopPropagation();onCompare(m);}} style={{cursor:"pointer",padding:"4px 10px",borderRadius:4,background:comparing?t.loss:t.bgAlt,color:comparing?t.textOnBtn:t.text2,fontSize:13,fontWeight:700,border:`1px solid ${t.border}`}}>{comparing?"Remove":"Compare"}</div>}<div onClick={onClose} style={{cursor:"pointer",width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:t.bgAlt,color:t.text2,fontSize:16,border:`1px solid ${t.border}`}}>×</div></div>
     </div>
-    <div style={{display:"flex",gap:2,marginBottom:14}}>{[["Entry ("+m.y+")",fmt(m.ew),t.text2],["Current",fmt(m.cw),t.text],["Change",noGain?"--":m.noPct?"N/A":(m.pct>=0?"+":"")+m.pct.toFixed(0)+"%",noGain||m.noPct?t.text3:m.pct>=0?t.gain:t.loss]].map(([l,v,c],i)=>(<div key={i} style={{flex:1,padding:"10px 12px",background:t.statBg,borderRadius:6}}><div style={{fontSize:12,color:t.text3,textTransform:"uppercase",letterSpacing:".06em"}}>{l}</div><div style={{fontSize:17,fontWeight:700,color:c,marginTop:4}}>{v}</div></div>))}</div>
-    {noGain&&<div style={{padding:"10px 14px",background:t.statBg,borderRadius:6,marginBottom:12,fontSize:12.5,color:t.text3,lineHeight:1.6}}>Only one financial disclosure on file — gain data requires an entry filing and a later filing to compare. {m.yrs<=2?"This member entered office recently.":"Entry and current filings report the same net worth."}</div>}
-    {!noGain&&m.noPct&&m.gain!==0&&<div style={{padding:"10px 14px",background:t.statBg,borderRadius:6,marginBottom:12,fontSize:12.5,color:t.text3,lineHeight:1.6}}>Entry net worth was {m.ew<0?"negative (debt exceeded assets)":"$0"} — percentage gain and annualized return cannot be calculated. Dollar gain and salary-year equivalents are shown.</div>}
-    {!noGain&&m.ew>0&&benchW&&<div style={{padding:"12px 16px",background:t.benchBg,border:`1px solid ${t.bench}33`,borderRadius:6,marginBottom:12}}><div style={{fontSize:14,color:t.bench,fontWeight:700}}>S&P 500 Comparison</div><div style={{fontSize:13.5,color:t.text2,marginTop:4,lineHeight:1.6}}>If {fmt(m.ew)} had been in an S&P index fund since {m.y}, it would be <strong style={{color:t.text}}>{fmt(benchW)}</strong>. Actual: <strong style={{color:t.text}}>{fmt(m.cw)}</strong> — {m.cw>benchW?<span style={{color:t.gain}}>{fmt(m.cw-benchW)} above</span>:<span style={{color:t.loss}}>{fmt(benchW-m.cw)} below</span>} benchmark.</div></div>}
-    {!noGain&&m.salYrs>0&&<div style={{padding:"12px 16px",background:t.callBg,border:`1px solid ${t.callBd}`,borderRadius:6,marginBottom:12}}><div style={{fontSize:14,color:t.gain,fontWeight:700}}>Wealth gained: {fmt(m.gain)}</div><div style={{fontSize:13.5,color:t.text2,marginTop:4}}>Equivalent to <strong style={{color:t.text}}>{m.salYrs.toFixed(0)} years</strong> of the $174,000 congressional salary.</div></div>}
+    <div style={{display:"flex",gap:2,marginBottom:14}}>{[["Entry ("+m.y+")",fmt(m.ew),t.text2],["Current",fmt(m.cw),t.text],["Change",noGain?"--":m.noPct?"N/A":(m.pct>=0?"+":"")+m.pct.toFixed(0)+"%",noGain||m.noPct?t.text3:m.pct>=0?t.gain:t.loss]].map(([l,v,c],i)=>(<div key={i} style={{flex:1,padding:"10px 12px",background:t.statBg,borderRadius:6}}><div style={{fontSize:13,color:t.text3,textTransform:"uppercase",letterSpacing:".06em"}}>{l}</div><div style={{fontSize:17,fontWeight:700,color:c,marginTop:4}}>{v}</div></div>))}</div>
+    {noGain&&<div style={{padding:"10px 14px",background:t.statBg,borderRadius:6,marginBottom:12,fontSize:13.5,color:t.text3,lineHeight:1.6}}>Only one financial disclosure on file — gain data requires an entry filing and a later filing to compare. {m.yrs<=2?"This member entered office recently.":"Entry and current filings report the same net worth."}</div>}
+    {!noGain&&m.noPct&&m.gain!==0&&<div style={{padding:"10px 14px",background:t.statBg,borderRadius:6,marginBottom:12,fontSize:13.5,color:t.text3,lineHeight:1.6}}>Entry net worth was {m.ew<0?"negative (debt exceeded assets)":"$0"} — percentage gain and annualized return cannot be calculated. Dollar gain and salary-year equivalents are shown.</div>}
+    {!noGain&&m.ew>0&&benchW&&<div style={{padding:"12px 16px",background:t.benchBg,border:`1px solid ${t.bench}33`,borderRadius:6,marginBottom:12}}><div style={{fontSize:14,color:t.bench,fontWeight:700}}>S&P 500 Comparison</div><div style={{fontSize:14,color:t.text2,marginTop:4,lineHeight:1.6}}>If {fmt(m.ew)} had been in an S&P index fund since {m.y}, it would be <strong style={{color:t.text}}>{fmt(benchW)}</strong>. Actual: <strong style={{color:t.text}}>{fmt(m.cw)}</strong> — {m.cw>benchW?<span style={{color:t.gain}}>{fmt(m.cw-benchW)} above</span>:<span style={{color:t.loss}}>{fmt(benchW-m.cw)} below</span>} benchmark.</div></div>}
+    {!noGain&&m.salYrs>0&&<div style={{padding:"12px 16px",background:t.callBg,border:`1px solid ${t.callBd}`,borderRadius:6,marginBottom:12}}><div style={{fontSize:14,color:t.gain,fontWeight:700}}>Wealth gained: {fmt(m.gain)}</div><div style={{fontSize:14,color:t.text2,marginTop:4}}>Equivalent to <strong style={{color:t.text}}>{m.salYrs.toFixed(0)} years</strong> of the $174,000 congressional salary.</div></div>}
     {(()=>{const ak=m.nm+"|"+m.s;const raw=ASSETS[ak];if(!raw)return null;const secs=raw.split(";").map(s=>{const[k,v]=s.split(":");return{sector:k,pct:parseInt(v)};}).filter(s=>s.pct>0);if(!secs.length)return null;
       return(<div style={{padding:"12px 16px",background:t.statBg,borderRadius:6,marginBottom:12}}>
         <div style={{fontSize:14,color:t.text,fontWeight:700,marginBottom:8}}>Asset Allocation</div>
@@ -622,7 +622,7 @@ function MemberDetail({m,onClose,onCompare,comparing}){const t=useT();
           {secs.map((s,i)=>(<div key={i} style={{width:s.pct+"%",background:SEC_CLR[s.sector]||"#94a3b8",minWidth:s.pct>3?0:2}} title={s.sector+": "+s.pct+"%"}/>))}
         </div>
         <div style={{display:"flex",flexWrap:"wrap",gap:"4px 12px"}}>
-          {secs.map((s,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:4,fontSize:12.5}}>
+          {secs.map((s,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:4,fontSize:13.5}}>
             <div style={{width:8,height:8,borderRadius:2,background:SEC_CLR[s.sector]||"#94a3b8",flexShrink:0}}/>
             <span style={{color:t.text2}}>{s.sector}</span>
             <span style={{color:t.text,fontWeight:700}}>{s.pct}%</span>
@@ -636,27 +636,27 @@ function MemberDetail({m,onClose,onCompare,comparing}){const t=useT();
       return(<div style={{padding:"12px 16px",background:t.statBg,borderRadius:6,marginBottom:12}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
           <div style={{fontSize:14,color:t.text,fontWeight:700}}>STOCK Act Trades</div>
-          <div style={{fontSize:12,color:t.text3}}>{first} — {last}</div>
+          <div style={{fontSize:13,color:t.text3}}>{first} — {last}</div>
         </div>
         <div style={{display:"flex",gap:12,marginBottom:8}}>
-          <div><span style={{fontSize:16,fontWeight:700,color:t.text}}>{total}</span><span style={{fontSize:12,color:t.text3,marginLeft:3}}>trades</span></div>
-          <div><span style={{fontSize:14,fontWeight:700,color:t.gain}}>{buys}</span><span style={{fontSize:12,color:t.text3,marginLeft:3}}>buys</span></div>
-          <div><span style={{fontSize:14,fontWeight:700,color:t.loss}}>{sells}</span><span style={{fontSize:12,color:t.text3,marginLeft:3}}>sells</span></div>
+          <div><span style={{fontSize:16,fontWeight:700,color:t.text}}>{total}</span><span style={{fontSize:13,color:t.text3,marginLeft:3}}>trades</span></div>
+          <div><span style={{fontSize:14,fontWeight:700,color:t.gain}}>{buys}</span><span style={{fontSize:13,color:t.text3,marginLeft:3}}>buys</span></div>
+          <div><span style={{fontSize:14,fontWeight:700,color:t.loss}}>{sells}</span><span style={{fontSize:13,color:t.text3,marginLeft:3}}>sells</span></div>
         </div>
         {tixStr&&<div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:trades?8:0}}>
-          {tixStr.split(",").map((t2,i)=>{const[tk2,ct]=t2.split(":");return tk2?(<span key={i} style={{padding:"2px 6px",borderRadius:3,fontSize:11.5,fontWeight:700,background:t.bgAlt,color:t.text2,border:`1px solid ${t.borderLt}`}}>{tk2} ×{ct}</span>):null;})}
+          {tixStr.split(",").map((t2,i)=>{const[tk2,ct]=t2.split(":");return tk2?(<span key={i} style={{padding:"2px 6px",borderRadius:3,fontSize:13,fontWeight:700,background:t.bgAlt,color:t.text2,border:`1px solid ${t.borderLt}`}}>{tk2} ×{ct}</span>):null;})}
         </div>}
         {trades&&trades.length>0&&<div style={{borderTop:`1px solid ${t.borderLt}`,paddingTop:6}}>
-          <div style={{fontSize:11.5,color:t.text3,marginBottom:4,textTransform:"uppercase",fontWeight:700}}>Recent Trades</div>
+          <div style={{fontSize:13,color:t.text3,marginBottom:4,textTransform:"uppercase",fontWeight:700}}>Recent Trades</div>
           {trades.slice(0,8).map((tr,i)=>{const[dt,tp,tk2,sec,amt]=tr.split("|");
-            return(<div key={i} style={{display:"flex",alignItems:"center",gap:6,padding:"3px 0",fontSize:12.5,borderBottom:`1px solid ${t.borderLt}22`}}>
+            return(<div key={i} style={{display:"flex",alignItems:"center",gap:6,padding:"3px 0",fontSize:13.5,borderBottom:`1px solid ${t.borderLt}22`}}>
               <span style={{color:t.text3,width:62,flexShrink:0}}>{dt}</span>
               <span style={{width:14,fontWeight:700,color:tp==="B"?t.gain:t.loss}}>{tp==="B"?"B":"S"}</span>
               <span style={{flex:1,color:t.text,fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{tk2||"—"}</span>
-              <span style={{padding:"1px 4px",borderRadius:2,fontSize:10.5,background:SEC_CLR[sec]||"#94a3b8",color:"#fff"}}>{sec}</span>
+              <span style={{padding:"1px 4px",borderRadius:2,fontSize:13,background:SEC_CLR[sec]||"#94a3b8",color:"#fff"}}>{sec}</span>
               <span style={{color:t.text2,width:48,textAlign:"right",flexShrink:0}}>{amt>=1000000?"$"+Math.round(amt/1000000)+"M":amt>=1000?"$"+Math.round(amt/1000)+"K":"$"+amt}</span>
             </div>);})}
-          {trades.length>8&&<div style={{fontSize:11.5,color:t.text3,marginTop:4}}>+{trades.length-8} more trades</div>}
+          {trades.length>8&&<div style={{fontSize:13,color:t.text3,marginTop:4}}>+{trades.length-8} more trades</div>}
         </div>}
       </div>);
     })()}
@@ -666,13 +666,13 @@ function MemberDetail({m,onClose,onCompare,comparing}){const t=useT();
       if(late>0)return(<div style={{padding:"10px 14px",background:"rgba(196,51,51,0.06)",border:`1px solid rgba(196,51,51,0.2)`,borderRadius:6,marginBottom:12}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
           <div style={{fontSize:14,fontWeight:700,color:t.loss}}>⚠ STOCK Act Violation</div>
-          <div style={{fontSize:12,color:t.text3}}>{late} of {total} trades filed late</div>
+          <div style={{fontSize:13,color:t.text3}}>{late} of {total} trades filed late</div>
         </div>
-        <div style={{fontSize:12.5,color:t.text2,marginTop:4,lineHeight:1.6}}>Average filing delay: {avg} days. Worst: <strong style={{color:t.loss}}>{worst} days</strong> (law requires 45). {vMax>0?`Late-disclosed trades worth $${vMin>=1e6?(vMin/1e6).toFixed(1)+"M":Math.round(vMin/1e3)+"K"}–$${vMax>=1e6?(vMax/1e6).toFixed(1)+"M":Math.round(vMax/1e3)+"K"}.`:""}</div>
+        <div style={{fontSize:13.5,color:t.text2,marginTop:4,lineHeight:1.6}}>Average filing delay: {avg} days. Worst: <strong style={{color:t.loss}}>{worst} days</strong> (law requires 45). {vMax>0?`Late-disclosed trades worth $${vMin>=1e6?(vMin/1e6).toFixed(1)+"M":Math.round(vMin/1e3)+"K"}–$${vMax>=1e6?(vMax/1e6).toFixed(1)+"M":Math.round(vMax/1e3)+"K"}.`:""}</div>
       </div>);
       return(<div style={{padding:"8px 14px",background:"rgba(22,128,60,0.06)",border:`1px solid rgba(22,128,60,0.15)`,borderRadius:6,marginBottom:12}}>
-        <div style={{fontSize:13,color:t.gain,fontWeight:700}}>✓ STOCK Act Compliant</div>
-        <div style={{fontSize:12,color:t.text3,marginTop:2}}>{total} trades filed on time. Average delay: {avg} days.</div>
+        <div style={{fontSize:14,color:t.gain,fontWeight:700}}>✓ STOCK Act Compliant</div>
+        <div style={{fontSize:13,color:t.text3,marginTop:2}}>{total} trades filed on time. Average delay: {avg} days.</div>
       </div>);
     })()}
     {(()=>{const ck=m.nm+"|"+m.s;const raw=CFIN[ck];if(!raw)return null;
@@ -682,12 +682,12 @@ function MemberDetail({m,onClose,onCompare,comparing}){const t=useT();
       return(<div style={{padding:"12px 16px",background:t.statBg,borderRadius:6,marginBottom:12}}>
         <div style={{fontSize:14,color:t.text,fontWeight:700,marginBottom:8}}>Campaign Finance</div>
         <div style={{display:"flex",gap:12,marginBottom:inds.length?8:0}}>
-          <div><span style={{fontSize:14,fontWeight:700,color:t.text}}>{totalK>=1000?"$"+(totalK/1000).toFixed(1)+"M":"$"+totalK+"K"}</span><span style={{fontSize:12,color:t.text3,marginLeft:3}}>raised</span></div>
-          <div><span style={{fontSize:13.5,fontWeight:700,color:t.warn}}>{pacK>=1000?"$"+(pacK/1000).toFixed(1)+"M":"$"+pacK+"K"}</span><span style={{fontSize:12,color:t.text3,marginLeft:3}}>PACs</span></div>
-          <div><span style={{fontSize:13.5,fontWeight:700,color:t.text2}}>{indivK>=1000?"$"+(indivK/1000).toFixed(1)+"M":"$"+indivK+"K"}</span><span style={{fontSize:12,color:t.text3,marginLeft:3}}>indiv.</span></div>
+          <div><span style={{fontSize:14,fontWeight:700,color:t.text}}>{totalK>=1000?"$"+(totalK/1000).toFixed(1)+"M":"$"+totalK+"K"}</span><span style={{fontSize:13,color:t.text3,marginLeft:3}}>raised</span></div>
+          <div><span style={{fontSize:14,fontWeight:700,color:t.warn}}>{pacK>=1000?"$"+(pacK/1000).toFixed(1)+"M":"$"+pacK+"K"}</span><span style={{fontSize:13,color:t.text3,marginLeft:3}}>PACs</span></div>
+          <div><span style={{fontSize:14,fontWeight:700,color:t.text2}}>{indivK>=1000?"$"+(indivK/1000).toFixed(1)+"M":"$"+indivK+"K"}</span><span style={{fontSize:13,color:t.text3,marginLeft:3}}>indiv.</span></div>
         </div>
         {inds.length>0&&<div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
-          {inds.map((ind,i)=>(<span key={i} style={{padding:"2px 6px",borderRadius:3,fontSize:11.5,fontWeight:700,background:SEC_CLR[ind.industry]||"#94a3b8",color:"#fff"}}>{ind.industry} {ind.amount>=1000?"$"+(ind.amount/1000).toFixed(1)+"M":"$"+ind.amount+"K"}</span>))}
+          {inds.map((ind,i)=>(<span key={i} style={{padding:"2px 6px",borderRadius:3,fontSize:13,fontWeight:700,background:SEC_CLR[ind.industry]||"#94a3b8",color:"#fff"}}>{ind.industry} {ind.amount>=1000?"$"+(ind.amount/1000).toFixed(1)+"M":"$"+ind.amount+"K"}</span>))}
         </div>}
       </div>);
     })()}
@@ -698,9 +698,9 @@ function MemberDetail({m,onClose,onCompare,comparing}){const t=useT();
       return(<div style={{padding:"12px 16px",background:t.statBg,borderRadius:6,marginBottom:12}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
           <div style={{fontSize:14,color:t.text,fontWeight:700}}>Outside Income</div>
-          <div style={{fontSize:13,color:t.warn,fontWeight:700}}>{total>=1e6?"$"+(total/1e6).toFixed(1)+"M":"$"+(total/1e3).toFixed(0)+"K"}</div>
+          <div style={{fontSize:14,color:t.warn,fontWeight:700}}>{total>=1e6?"$"+(total/1e6).toFixed(1)+"M":"$"+(total/1e3).toFixed(0)+"K"}</div>
         </div>
-        {incs.map((inc,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"3px 0",borderBottom:i<incs.length-1?`1px solid ${t.borderLt}22`:"none",fontSize:12.5}}>
+        {incs.map((inc,i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"3px 0",borderBottom:i<incs.length-1?`1px solid ${t.borderLt}22`:"none",fontSize:13.5}}>
           <div style={{flex:1,minWidth:0}}><span style={{color:t.text,fontWeight:600}}>{inc.source}</span><span style={{color:t.text3,marginLeft:4}}>{inc.type}</span></div>
           <div style={{color:t.warn,fontWeight:700,flexShrink:0,marginLeft:8}}>{inc.amount>=1e6?"$"+(inc.amount/1e6).toFixed(1)+"M":"$"+(inc.amount/1e3).toFixed(0)+"K"}</div>
         </div>))}
@@ -714,26 +714,26 @@ function MemberDetail({m,onClose,onCompare,comparing}){const t=useT();
       return(<div style={{padding:"12px 16px",background:t.statBg,borderRadius:6,marginBottom:12}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
           <div style={{fontSize:14,color:t.text,fontWeight:700}}>Outside Positions</div>
-          <div style={{fontSize:12,color:t.text3}}>{positions.length} total{corp?" · "+corp+" corporate":""}{nonp?" · "+nonp+" nonprofit":""}</div>
+          <div style={{fontSize:13,color:t.text3}}>{positions.length} total{corp?" · "+corp+" corporate":""}{nonp?" · "+nonp+" nonprofit":""}</div>
         </div>
-        {positions.map((pos,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:6,padding:"3px 0",borderBottom:i<positions.length-1?`1px solid ${t.borderLt}22`:"none",fontSize:12.5}}>
-          <span style={{padding:"1px 5px",borderRadius:3,fontSize:10.5,fontWeight:700,background:pos.type==="Corporate"?t.warn:pos.type==="Nonprofit"?"#7c3aed":pos.type==="Academic"?t.bench:t.text3,color:"#fff",flexShrink:0}}>{pos.type}</span>
+        {positions.map((pos,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:6,padding:"3px 0",borderBottom:i<positions.length-1?`1px solid ${t.borderLt}22`:"none",fontSize:13.5}}>
+          <span style={{padding:"1px 5px",borderRadius:3,fontSize:13,fontWeight:700,background:pos.type==="Corporate"?t.warn:pos.type==="Nonprofit"?"#7c3aed":pos.type==="Academic"?t.bench:t.text3,color:"#fff",flexShrink:0}}>{pos.type}</span>
           <div style={{flex:1,minWidth:0,overflow:"hidden"}}><span style={{color:t.text,fontWeight:600}}>{pos.role}</span><span style={{color:t.text3,marginLeft:4}}>{pos.org}</span></div>
         </div>))}
       </div>);
     })()}
-    {items.map(([l,v],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`1px solid ${t.borderLt}`,fontSize:13.5}}><span style={{color:t.text3}}>{l}</span><span style={{color:t.text,fontWeight:600,textAlign:"right",maxWidth:"58%"}}>{v}</span></div>))}
+    {items.map(([l,v],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`1px solid ${t.borderLt}`,fontSize:14}}><span style={{color:t.text3}}>{l}</span><span style={{color:t.text,fontWeight:600,textAlign:"right",maxWidth:"58%"}}>{v}</span></div>))}
   </div></div>);
 }
 
 /* ═══════ ROW ═══════ */
 function Row({m,compact,onClick,onName}){const t=useT();const mb=t.mob;const tb=t.tab2;
-  return(<div onClick={onClick} style={{display:"flex",alignItems:"center",gap:compact?3:6,padding:compact?"6px 10px":mb?"7px 10px":"6px 12px",borderBottom:`1px solid ${t.borderLt}`,fontSize:13.5,fontFamily:"'Courier Prime',monospace",cursor:onClick?"pointer":"default",transition:"background .1s"}} onMouseEnter={e=>{e.currentTarget.style.background=t.bgHover;}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
+  return(<div onClick={onClick} style={{display:"flex",alignItems:"center",gap:compact?3:6,padding:compact?"6px 10px":mb?"7px 10px":"6px 12px",borderBottom:`1px solid ${t.borderLt}`,fontSize:14,fontFamily:"'Courier Prime',monospace",cursor:onClick?"pointer":"default",transition:"background .1s"}} onMouseEnter={e=>{e.currentTarget.style.background=t.bgHover;}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
     {compact||mb?<div style={{width:3,height:20,borderRadius:1,background:pClr(t,m.p),flexShrink:0}}/>:m.bg?<img src={`https://bioguide.congress.gov/bioguide/photo/${m.bg[0]}/${m.bg}.jpg`} style={{width:20,height:20,borderRadius:"50%",objectFit:"cover",border:`1.5px solid ${pClr(t,m.p)}`,flexShrink:0}} onError={e=>{e.target.style.display="none";}}/>:<div style={{width:20,height:20,borderRadius:"50%",background:pClr(t,m.p),opacity:.2,flexShrink:0}}/>}
     <div style={{flex:1,minWidth:0,overflow:"hidden"}}><div style={{fontWeight:700,color:t.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",fontSize:compact||mb?10:10.5,cursor:onName?"pointer":"default"}} onClick={e=>{e.stopPropagation();onName?.(m);}}>{m.nm}</div><div style={{fontSize:compact||mb?8:8.5,color:t.text3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.p} · {m.ch==="S"?"Sen.":m.d?"Dist. "+m.d:"Rep."} · {SN[m.s]||m.s}</div></div>
     {!mb&&<div style={{width:68,textAlign:"right",flexShrink:0,color:t.text2,fontSize:compact?9.5:10}}>{fmt(m.ew)}</div>}
     <div style={{width:mb?60:68,textAlign:"right",flexShrink:0,color:t.text,fontWeight:700,fontSize:compact||mb?9.5:10}}>{fmt(m.cw)}</div>
-    {!compact&&!mb&&<div style={{width:52,textAlign:"right",flexShrink:0,fontSize:12.5,color:m.ew===m.cw?t.textM:m.aboveBench!=null&&m.aboveBench>0?t.gain:t.text2}}>{m.ew===m.cw?"--":(m.ann!=null?m.ann.toFixed(1)+"%":"--")}</div>}
+    {!compact&&!mb&&<div style={{width:52,textAlign:"right",flexShrink:0,fontSize:13.5,color:m.ew===m.cw?t.textM:m.aboveBench!=null&&m.aboveBench>0?t.gain:t.text2}}>{m.ew===m.cw?"--":(m.ann!=null?m.ann.toFixed(1)+"%":"--")}</div>}
     <div style={{width:mb?44:52,textAlign:"right",flexShrink:0,fontWeight:700,fontSize:compact||mb?9.5:10,color:m.ew===m.cw?t.textM:m.noPct?t.text3:m.pct>0?t.gain:m.pct<0?t.loss:t.text3}}>{m.ew===m.cw?"--":m.noPct?"N/A":((m.pct>0?"+":"")+m.pct.toFixed(0)+"%")}</div>
   </div>);
 }
@@ -746,14 +746,14 @@ function Panel({st,members,onClose,onMem}){const t=useT();
   const mxP=Math.max(...all.map(m=>Math.abs(m.pct)),1);
   return(<div style={{width:t.mob?'100%':360,borderLeft:t.mob?'none':`1px solid ${t.border}`,background:t.bgPanel,overflowY:"auto",maxHeight:"100%",padding:"16px 0",flexShrink:0,position:t.mob?"absolute":"static",inset:t.mob?"0":undefined,zIndex:t.mob?50:undefined}}>
     <div style={{padding:"0 14px",display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}>
-      <div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:18,fontWeight:900,color:t.heading}}>{SN[st]||st}</div><div style={{fontSize:12.5,color:t.text3,marginTop:1}}>{sens.length} sen.{reps.length>0?`, ${reps.length} rep${reps.length!==1?"s":""}`:""}</div></div>
+      <div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:18,fontWeight:900,color:t.heading}}>{SN[st]||st}</div><div style={{fontSize:13.5,color:t.text3,marginTop:1}}>{sens.length} sen.{reps.length>0?`, ${reps.length} rep${reps.length!==1?"s":""}`:""}</div></div>
       <div onClick={onClose} style={{cursor:"pointer",width:24,height:24,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:t.bgAlt,color:t.text2,fontSize:14,border:`1px solid ${t.border}`}}>×</div>
     </div>
-    <div style={{display:"flex",gap:1,margin:"6px 14px 12px",background:t.statBg,borderRadius:5,overflow:"hidden"}}>{[["Combined NW",fmt(tc),t.text],["Median Gain",real.length?(medPct>=0?"+":"")+medPct.toFixed(0)+"%":"--",medPct>=0?t.gain:t.loss],["With Data",real.length+"/"+all.length,t.text3]].map(([l,v,c],i)=>(<div key={i} style={{flex:1,padding:"7px 8px",borderRight:i<2?`1px solid ${t.borderLt}`:"none"}}><div style={{fontSize:11,color:t.text3,textTransform:"uppercase",letterSpacing:".06em"}}>{l}</div><div style={{fontSize:13.5,fontWeight:700,color:c,marginTop:2}}>{v}</div></div>))}</div>
-    {sens.length>0&&<><div style={{padding:"0 14px",fontSize:11.5,color:t.text3,textTransform:"uppercase",letterSpacing:".08em",marginBottom:3}}>Senate</div>{sens.map((m,i)=><Row key={i} m={m} compact onName={onMem}/>)}</>}
-    {reps.length>0&&<><div style={{padding:"0 14px",fontSize:11.5,color:t.text3,textTransform:"uppercase",letterSpacing:".08em",marginBottom:3,marginTop:10}}>House</div>{reps.map((m,i)=><Row key={i} m={m} compact onName={onMem}/>)}</>}
-    <div style={{padding:"10px 14px"}}><div style={{fontSize:11.5,color:t.text3,textTransform:"uppercase",letterSpacing:".08em",marginBottom:5}}>Wealth Growth</div>
-      {[...all].sort((a,b)=>b.pct-a.pct).map((m,i)=>{const p=m.pct;const w=Math.max((Math.abs(p)/mxP)*100,3);return(<div key={i} style={{display:"flex",alignItems:"center",marginBottom:3,gap:4}}><div style={{fontSize:11.5,color:t.text2,width:60,textAlign:"right",flexShrink:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.nm.split(" ").pop()}</div><div style={{flex:1,height:8,background:t.barBg,borderRadius:3}}><div style={{height:"100%",borderRadius:3,width:`${w}%`,background:p>=0?t.barG:t.barL}}/></div><div style={{fontSize:11.5,fontWeight:700,color:p>=0?t.gain:t.loss,width:40,flexShrink:0,textAlign:"right"}}>{p>=0?"+":""}{p.toFixed(0)}%</div></div>);})}</div>
+    <div style={{display:"flex",gap:1,margin:"6px 14px 12px",background:t.statBg,borderRadius:5,overflow:"hidden"}}>{[["Combined NW",fmt(tc),t.text],["Median Gain",real.length?(medPct>=0?"+":"")+medPct.toFixed(0)+"%":"--",medPct>=0?t.gain:t.loss],["With Data",real.length+"/"+all.length,t.text3]].map(([l,v,c],i)=>(<div key={i} style={{flex:1,padding:"7px 8px",borderRight:i<2?`1px solid ${t.borderLt}`:"none"}}><div style={{fontSize:13,color:t.text3,textTransform:"uppercase",letterSpacing:".06em"}}>{l}</div><div style={{fontSize:14,fontWeight:700,color:c,marginTop:2}}>{v}</div></div>))}</div>
+    {sens.length>0&&<><div style={{padding:"0 14px",fontSize:13,color:t.text3,textTransform:"uppercase",letterSpacing:".08em",marginBottom:3}}>Senate</div>{sens.map((m,i)=><Row key={i} m={m} compact onName={onMem}/>)}</>}
+    {reps.length>0&&<><div style={{padding:"0 14px",fontSize:13,color:t.text3,textTransform:"uppercase",letterSpacing:".08em",marginBottom:3,marginTop:10}}>House</div>{reps.map((m,i)=><Row key={i} m={m} compact onName={onMem}/>)}</>}
+    <div style={{padding:"10px 14px"}}><div style={{fontSize:13,color:t.text3,textTransform:"uppercase",letterSpacing:".08em",marginBottom:5}}>Wealth Growth</div>
+      {[...all].sort((a,b)=>b.pct-a.pct).map((m,i)=>{const p=m.pct;const w=Math.max((Math.abs(p)/mxP)*100,3);return(<div key={i} style={{display:"flex",alignItems:"center",marginBottom:3,gap:4}}><div style={{fontSize:13,color:t.text2,width:60,textAlign:"right",flexShrink:0,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.nm.split(" ").pop()}</div><div style={{flex:1,height:8,background:t.barBg,borderRadius:3}}><div style={{height:"100%",borderRadius:3,width:`${w}%`,background:p>=0?t.barG:t.barL}}/></div><div style={{fontSize:13,fontWeight:700,color:p>=0?t.gain:t.loss,width:40,flexShrink:0,textAlign:"right"}}>{p>=0?"+":""}{p.toFixed(0)}%</div></div>);})}</div>
   </div>);
 }
 
@@ -764,18 +764,18 @@ function Scatter({data,onDot,cmpSet}){const t=useT();const W=700,H=340,pad={t:18
   const bPts=[];for(let yr=1;yr<=maxYrs;yr++){const b=sp500CagrYrs(yr);if(b<=maxAnn)bPts.push({yrs:yr,ann:b});}
   const bLine=bPts.map((p,i)=>`${i===0?"M":"L"}${pad.l+(p.yrs/maxYrs)*iw},${pad.t+ih-(p.ann/maxAnn)*ih}`).join(" ");
   return(<svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",maxWidth:W,height:"auto"}}>
-    {[0,.25,.5,.75,1].map(v=>{const yy=pad.t+ih*(1-v);return(<g key={v}><line x1={pad.l} y1={yy} x2={W-pad.r} y2={yy} stroke={t.grid} strokeWidth={.5}/><text x={pad.l-5} y={yy+3} textAnchor="end" style={{fontSize:11,fill:t.text3,fontFamily:"'Courier Prime',monospace"}}>{(maxAnn*v).toFixed(0)}%</text></g>);})}
-    {[0,.25,.5,.75,1].map(v=>{const xx=pad.l+iw*v;return(<g key={v}><line x1={xx} y1={pad.t} x2={xx} y2={pad.t+ih} stroke={t.grid} strokeWidth={.5}/><text x={xx} y={H-pad.b+14} textAnchor="middle" style={{fontSize:11,fill:t.text3,fontFamily:"'Courier Prime',monospace"}}>{(maxYrs*v).toFixed(0)}yr</text></g>);})}
-    <text x={W/2} y={H-4} textAnchor="middle" style={{fontSize:12,fill:t.text3,fontFamily:"'Courier Prime',monospace"}}>Years in Office</text>
-    <text x={11} y={H/2} textAnchor="middle" transform={`rotate(-90,11,${H/2})`} style={{fontSize:12,fill:t.text3,fontFamily:"'Courier Prime',monospace"}}>Annualized Return</text>
-    {bLine&&<><path d={bLine} fill="none" stroke={t.bench} strokeWidth={1.5} strokeDasharray="4,3" opacity={.7}/><text x={pad.l+iw-2} y={pad.t+ih-(sp500CagrYrs(maxYrs)/maxAnn)*ih-6} textAnchor="end" style={{fontSize:10.5,fill:t.bench,fontFamily:"'Courier Prime',monospace",fontWeight:700}}>S&P 500</text></>}
+    {[0,.25,.5,.75,1].map(v=>{const yy=pad.t+ih*(1-v);return(<g key={v}><line x1={pad.l} y1={yy} x2={W-pad.r} y2={yy} stroke={t.grid} strokeWidth={.5}/><text x={pad.l-5} y={yy+3} textAnchor="end" style={{fontSize:13,fill:t.text3,fontFamily:"'Courier Prime',monospace"}}>{(maxAnn*v).toFixed(0)}%</text></g>);})}
+    {[0,.25,.5,.75,1].map(v=>{const xx=pad.l+iw*v;return(<g key={v}><line x1={xx} y1={pad.t} x2={xx} y2={pad.t+ih} stroke={t.grid} strokeWidth={.5}/><text x={xx} y={H-pad.b+14} textAnchor="middle" style={{fontSize:13,fill:t.text3,fontFamily:"'Courier Prime',monospace"}}>{(maxYrs*v).toFixed(0)}yr</text></g>);})}
+    <text x={W/2} y={H-4} textAnchor="middle" style={{fontSize:13,fill:t.text3,fontFamily:"'Courier Prime',monospace"}}>Years in Office</text>
+    <text x={11} y={H/2} textAnchor="middle" transform={`rotate(-90,11,${H/2})`} style={{fontSize:13,fill:t.text3,fontFamily:"'Courier Prime',monospace"}}>Annualized Return</text>
+    {bLine&&<><path d={bLine} fill="none" stroke={t.bench} strokeWidth={1.5} strokeDasharray="4,3" opacity={.7}/><text x={pad.l+iw-2} y={pad.t+ih-(sp500CagrYrs(maxYrs)/maxAnn)*ih-6} textAnchor="end" style={{fontSize:13,fill:t.bench,fontFamily:"'Courier Prime',monospace",fontWeight:700}}>S&P 500</text></>}
     {pts.map((m,i)=>{const cx=xp(m),cy=yp(m);const r=Math.max(3,Math.min(10,Math.sqrt(m.cw/4e6)));const inC=cmpSet?.has(m.nm);
       return(<circle key={i} cx={cx} cy={cy} r={inC?r+2:r} fill={pClr(t,m.p)} fillOpacity={inC?.7:.35} stroke={inC?t.text:pClr(t,m.p)} strokeOpacity={inC?1:.7} strokeWidth={inC?1.5:.7} style={{cursor:"pointer"}} onClick={()=>onDot(m)}><title>{m.nm}: {m.ann?.toFixed(1)}%/yr ({m.yrs}yr)</title></circle>);})}
-    {pts.filter(m=>cmpSet?.has(m.nm)).map((m,i)=><text key={`cl-${i}`} x={xp(m)} y={yp(m)-Math.max(3,Math.min(10,Math.sqrt(m.cw/4e6)))-4} textAnchor="middle" style={{fontSize:10.5,fill:t.text,fontWeight:700,fontFamily:"'Courier Prime',monospace"}}>{m.nm.split(" ").pop()}</text>)}
+    {pts.filter(m=>cmpSet?.has(m.nm)).map((m,i)=><text key={`cl-${i}`} x={xp(m)} y={yp(m)-Math.max(3,Math.min(10,Math.sqrt(m.cw/4e6)))-4} textAnchor="middle" style={{fontSize:13,fill:t.text,fontWeight:700,fontFamily:"'Courier Prime',monospace"}}>{m.nm.split(" ").pop()}</text>)}
     {/* Auto-label outliers */}
     {(()=>{const labeled=new Set(cmpSet||[]);const toLabel=[];const byAnn=[...pts].sort((a,b)=>(b.ann||0)-(a.ann||0));const byNW=[...pts].sort((a,b)=>b.cw-a.cw);const byYrs=[...pts].sort((a,b)=>b.yrs-a.yrs);
       [byNW[0],byNW[1],byNW[2],byAnn[0],byAnn[1],byYrs[0],byYrs[1]].filter(Boolean).forEach(m=>{if(!labeled.has(m.nm)){labeled.add(m.nm);toLabel.push(m);}});
-      return toLabel.map((m,i)=><text key={`al-${i}`} x={xp(m)} y={yp(m)-Math.max(3,Math.min(10,Math.sqrt(m.cw/4e6)))-4} textAnchor="middle" style={{fontSize:9.5,fill:t.text2,fontFamily:"'Courier Prime',monospace"}}>{m.nm.split(" ").pop()}</text>);
+      return toLabel.map((m,i)=><text key={`al-${i}`} x={xp(m)} y={yp(m)-Math.max(3,Math.min(10,Math.sqrt(m.cw/4e6)))-4} textAnchor="middle" style={{fontSize:12,fill:t.text2,fontFamily:"'Courier Prime',monospace"}}>{m.nm.split(" ").pop()}</text>);
     })()}
   </svg>);
 }
@@ -783,11 +783,11 @@ function Scatter({data,onDot,cmpSet}){const t=useT();const W=700,H=340,pad={t:18
 /* ═══════ COMPARE BAR ═══════ */
 function CompareBar({members,onRemove,onOpen}){const t=useT();if(!members.length)return null;
   return(<div style={{borderTop:`1px solid ${t.border}`,background:t.cmpBg,padding:t.mob?"6px 10px":"8px 18px",display:"flex",alignItems:"center",gap:t.mob?4:8,flexShrink:0,flexWrap:"wrap"}}>
-    <span style={{fontSize:12,color:t.text3,fontWeight:700,textTransform:"uppercase"}}>Compare:</span>
+    <span style={{fontSize:13,color:t.text3,fontWeight:700,textTransform:"uppercase"}}>Compare:</span>
     {members.map((m,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:4,padding:"4px 8px",background:t.bgAlt,borderRadius:4,border:`1px solid ${t.borderLt}`}}>
-      <div style={{width:3,height:14,borderRadius:1,background:pClr(t,m.p)}}/><span style={{fontSize:12.5,fontWeight:700,color:t.text,cursor:"pointer"}} onClick={()=>onOpen(m)}>{t.mob?m.nm.split(" ").pop():m.nm}</span>
-      {!t.mob&&<span style={{fontSize:12,color:t.text2}}>({m.ann?.toFixed(1)}%/yr vs {m.bench.toFixed(1)}%)</span>}
-      <span onClick={()=>onRemove(m)} style={{cursor:"pointer",color:t.text3,fontSize:13.5}}>×</span>
+      <div style={{width:3,height:14,borderRadius:1,background:pClr(t,m.p)}}/><span style={{fontSize:13.5,fontWeight:700,color:t.text,cursor:"pointer"}} onClick={()=>onOpen(m)}>{t.mob?m.nm.split(" ").pop():m.nm}</span>
+      {!t.mob&&<span style={{fontSize:13,color:t.text2}}>({m.ann?.toFixed(1)}%/yr vs {m.bench.toFixed(1)}%)</span>}
+      <span onClick={()=>onRemove(m)} style={{cursor:"pointer",color:t.text3,fontSize:14}}>×</span>
     </div>))}
   </div>);
 }
@@ -867,41 +867,41 @@ export default function App(){
   const top5=k=>{const base=k==="rich"?[...ME].filter(m=>m.cw>0):[...ME].filter(m=>m.ew>0&&m.yrs>0&&m.ew!==m.cw);return base.sort((a,b)=>k==="bench"?(b.aboveBench||0)-(a.aboveBench||0):k==="rich"?b.cw-a.cw:k==="lowest"?a.pct-b.pct:k==="ann"?(b.ann||0)-(a.ann||0):b.gain-a.gain).slice(0,5);};
   const stats=useMemo(()=>{const n=ME.length;const real=ME.filter(m=>m.ew!==m.cw&&m.ew>0);const comparable=ME.filter(m=>m.ew>0&&m.ew!==m.cw&&m.cw>0&&m.aboveBench!=null&&m.yrs>2);const med=arr=>{const s=[...arr].sort((a,b)=>a-b);return s.length?s[Math.floor(s.length/2)]:0;};const median=med(real.map(m=>m.pct));const ds=real.filter(m=>m.p==="D"),rs=real.filter(m=>m.p==="R");const abv=comparable.filter(m=>m.aboveBench>0).length;return{n,nReal:real.length,median,medD:med(ds.map(m=>m.pct)),medR:med(rs.map(m=>m.pct)),aboveBenchPct:comparable.length?Math.round(abv/comparable.length*100):0};},[]);
 
-  const tab=a=>({padding:"5px 12px",fontSize:13,fontWeight:700,letterSpacing:".04em",textTransform:"uppercase",cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:a?`1px solid ${t.bgBtnA}`:`1px solid ${t.borderLt}`,fontFamily:"'Courier Prime',monospace"});
-  const fb=a=>({padding:"3px 8px",fontSize:11.5,cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:`1px solid ${a?t.bgBtnA:t.borderLt}`,fontFamily:"'Courier Prime',monospace",fontWeight:700});
+  const tab=a=>({padding:"5px 12px",fontSize:14,fontWeight:700,letterSpacing:".04em",textTransform:"uppercase",cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:a?`1px solid ${t.bgBtnA}`:`1px solid ${t.borderLt}`,fontFamily:"'Courier Prime',monospace"});
+  const fb=a=>({padding:"3px 8px",fontSize:13,cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:`1px solid ${a?t.bgBtnA:t.borderLt}`,fontFamily:"'Courier Prime',monospace",fontWeight:700});
 
   const Card=({title,list,metric})=>(<div style={{flex:1,minWidth:mob?140:170}}>
-    <div style={{fontSize:12,color:t.text3,textTransform:"uppercase",letterSpacing:".06em",marginBottom:4,fontWeight:700}}>{title}</div>
+    <div style={{fontSize:13,color:t.text3,textTransform:"uppercase",letterSpacing:".06em",marginBottom:4,fontWeight:700}}>{title}</div>
     {list.map((m,i)=>{const v=metric==="ann"?(m.ann?.toFixed(1)+"%/yr"):metric==="bench"?((m.aboveBench>=0?"+":"")+m.aboveBench?.toFixed(1)+" pp"):metric==="rich"?fmt(m.cw):metric==="lowest"?("+"+m.pct.toFixed(0)+"% / "+m.yrs+"yr"):("+"+fmt(m.gain));
       return(<div key={i} style={{display:"flex",alignItems:"center",gap:5,padding:"4px 8px",background:t.bgAlt,borderRadius:4,marginBottom:3,border:`1px solid ${t.borderLt}`,cursor:"pointer"}} onClick={()=>setDetail(m)}>
-        <div style={{fontSize:13,fontWeight:700,color:t.textM,width:12,textAlign:"right"}}>{i+1}</div>
+        <div style={{fontSize:14,fontWeight:700,color:t.textM,width:12,textAlign:"right"}}>{i+1}</div>
         <div style={{width:3,height:16,borderRadius:1,background:pClr(t,m.p),flexShrink:0}}/>
-        <div style={{flex:1,minWidth:0}}><div style={{fontSize:13,fontWeight:700,color:t.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.nm}</div><div style={{fontSize:10.5,color:t.text3}}>{SN[m.s]} · {m.yrs}yr</div></div>
-        <div style={{fontSize:13,fontWeight:700,color:metric==="lowest"?t.text2:metric==="bench"?(m.aboveBench>=0?t.gain:t.loss):metric==="ann"?t.gain:t.text2,whiteSpace:"nowrap"}}>{v}</div>
+        <div style={{flex:1,minWidth:0}}><div style={{fontSize:14,fontWeight:700,color:t.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.nm}</div><div style={{fontSize:13,color:t.text3}}>{SN[m.s]} · {m.yrs}yr</div></div>
+        <div style={{fontSize:14,fontWeight:700,color:metric==="lowest"?t.text2:metric==="bench"?(m.aboveBench>=0?t.gain:t.loss):metric==="ann"?t.gain:t.text2,whiteSpace:"nowrap"}}>{v}</div>
       </div>);})}
   </div>);
 
   return(<TC.Provider value={{...t,mob,tab2}}>
-    <div style={{height:"100vh",background:t.bg,fontFamily:"'Courier Prime',Courier,monospace",color:t.text,display:"flex",flexDirection:"column",overflow:"hidden"}}>
+    <div style={{minHeight:"100vh",background:t.bg,fontFamily:"'Courier Prime',Courier,monospace",color:t.text,display:"flex",flexDirection:"column"}}>
       <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet"/>
       {detail&&<MemberDetail m={detail} onClose={()=>setDetail(null)} onCompare={toggleCmp} comparing={cmpSet.has(detail.nm)}/>}
       {showMethod&&(()=>{const S=[["Data Sources","Net worth figures parsed from Senate EFDS and House financial disclosure filings by an automated agent. Entry figures from earliest available filing; current from most recent (typically 2024). Asset holdings, STOCK Act transactions, and campaign finance data from EFDS, House Clerk, and FEC respectively."],["Net Worth","Disclosure forms report assets and liabilities in value ranges (e.g. $100,001-$250,000). We use midpoints. 'Over $50,000,000' uses $50M as a floor — the wealthiest members are underestimated."],["Gain Calculation","Members showing '--' have only one filing available, so no gain can be computed. Members with zero or negative entry net worth show dollar gains and salary-year equivalents, but percentage and annualized returns display as N/A since percentage change from zero or negative is undefined."],["Annualized Return","CAGR: (current/entry)^(1/years)-1. Normalizes for time in office so a 40-year veteran can be compared to a 4-year freshman."],["S&P Benchmark","What passive S&P 500 total return investing would have produced over the same period, using the member's entry year. Members above the benchmark outperformed the market."],["Market Comparison","About half of members with comparable data (2+ years in office) beat the S&P 500 on an annualized basis. The median veteran member roughly tracks the benchmark. Freshmen (1 year of data) almost universally 'beat' the benchmark due to the short comparison window — this is a data artifact, not evidence of trading skill. Most congressional wealth accumulation comes from sources other than stock picks — real estate, business interests, and spousal income. Both parties show comparable patterns."],["Asset Holdings","Sector-classified asset data available for 45 of the wealthiest members. Sectors assigned by ticker lookup (AAPL=Tech, JPM=Finance) or asset type (mutual funds=Diversified, real estate=RealEstate). Values based on disclosure range midpoints."],["STOCK Act Trades","Periodic Transaction Reports (PTRs) scraped from EFDS and House Clerk for 39 actively trading members, covering 2023-2025. Filing delay analysis available for senators only — the Senate EFDS system exposes filing dates; the House Clerk PDF system does not."],["Campaign Finance","FEC data for 511 members including total raised, PAC contributions, and top donor industries by sector. Used to identify triple overlap: committee jurisdiction + personal holdings + campaign donors in the same industry."],["Committee Overlap","Committee-sector risk mappings define which industries each committee regulates (e.g. Banking → Finance, RealEstate). 'Triple overlap' flags members where personal holdings, active trades, AND campaign donors all align with their committee's regulated industries."],["Salary-Years","Total gain ÷ $174,000 annual salary. Illustrative context only."],["Districts","119th Congress boundaries from U.S. Census Bureau TIGER/Line cartographic files. District party from Clerk of the House."],["Coverage","540 members of the 119th Congress (100 Senate + 440 House; NJ-11 vacant). 509 with gain data (entry ≠ current NW). 402 with calculable percentage returns (entry NW > $0). 45 with sector-tagged asset holdings. 39 with STOCK Act transaction data. 511 with FEC campaign finance data. 223 with outside income data. 256 with outside positions. Spousal assets are included per standard methodology."]];
         return(<div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",background:t.bgModalOv,backdropFilter:"blur(4px)"}} onClick={()=>setShowMethod(false)}><div style={{background:t.bgModal,border:`1px solid ${t.border}`,borderRadius:10,padding:"24px 28px",maxWidth:560,width:"92%",maxHeight:"85vh",overflowY:"auto",color:t.text}} onClick={e=>e.stopPropagation()}>
           <div style={{display:"flex",justifyContent:"space-between",marginBottom:16}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:20,fontWeight:900,color:t.heading}}>Methodology</div><div onClick={()=>setShowMethod(false)} style={{cursor:"pointer",width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:t.bgAlt,color:t.text2,fontSize:16,border:`1px solid ${t.border}`}}>×</div></div>
-          {S.map(([ti,bo],i)=>(<div key={i} style={{marginBottom:12}}><div style={{fontSize:14,fontWeight:700,color:t.text,marginBottom:2}}>{ti}</div><div style={{fontSize:13.5,color:t.text2,lineHeight:1.7}}>{bo}</div></div>))}
+          {S.map(([ti,bo],i)=>(<div key={i} style={{marginBottom:12}}><div style={{fontSize:14,fontWeight:700,color:t.text,marginBottom:2}}>{ti}</div><div style={{fontSize:14,color:t.text2,lineHeight:1.7}}>{bo}</div></div>))}
         </div></div>);})()}
 
       {/* Header */}
       <div style={{borderBottom:`1px solid ${t.border}`,padding:mob?"8px 12px 6px":"10px 18px 8px",flexShrink:0}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:6}}>
           <div>
-            {!mob&&<div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:11,letterSpacing:".16em",textTransform:"uppercase",color:t.text3}}>Public Financial Disclosures</div>}
+            {!mob&&<div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:13,letterSpacing:".16em",textTransform:"uppercase",color:t.text3}}>Public Financial Disclosures</div>}
             <h1 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:mob?16:20,fontWeight:900,margin:0,color:t.heading}}>Congressional Wealth Tracker</h1>
-            {!mob&&<div style={{fontSize:12.5,color:t.text2,marginTop:3,maxWidth:520,lineHeight:1.55}}>Members of Congress from both parties enter public service and leave substantially wealthier. This tool tracks that pattern using public financial disclosures. It is not affiliated with any political party or advocacy organization.</div>}
-            {!mob&&<div style={{display:"flex",gap:12,marginTop:6,alignItems:"center"}}><a href="https://x.com/CongressWealth" target="_blank" rel="noopener" style={{display:"flex",alignItems:"center",gap:4,textDecoration:"none",color:t.text2,fontSize:12,fontWeight:700,padding:"3px 10px",borderRadius:4,border:`1px solid ${t.border}`,background:t.bgAlt}}>𝕏 <span style={{fontWeight:400}}>@CongressWealth</span></a><a href="mailto:wealthincongress@proton.me" style={{display:"flex",alignItems:"center",gap:4,textDecoration:"none",color:t.text2,fontSize:12,fontWeight:700,padding:"3px 10px",borderRadius:4,border:`1px solid ${t.border}`,background:t.bgAlt}}>✉ <span style={{fontWeight:400}}>Contact</span></a></div>}
+            {!mob&&<div style={{fontSize:13.5,color:t.text2,marginTop:3,maxWidth:520,lineHeight:1.55}}>Members of Congress from both parties enter public service and leave substantially wealthier. This tool tracks that pattern using public financial disclosures. It is not affiliated with any political party or advocacy organization.</div>}
+            {!mob&&<div style={{display:"flex",gap:12,marginTop:6,alignItems:"center"}}><a href="https://x.com/CongressWealth" target="_blank" rel="noopener" style={{display:"flex",alignItems:"center",gap:4,textDecoration:"none",color:t.text2,fontSize:13,fontWeight:700,padding:"3px 10px",borderRadius:4,border:`1px solid ${t.border}`,background:t.bgAlt}}>𝕏 <span style={{fontWeight:400}}>@CongressWealth</span></a><a href="mailto:wealthincongress@proton.me" style={{display:"flex",alignItems:"center",gap:4,textDecoration:"none",color:t.text2,fontSize:13,fontWeight:700,padding:"3px 10px",borderRadius:4,border:`1px solid ${t.border}`,background:t.bgAlt}}>✉ <span style={{fontWeight:400}}>Contact</span></a></div>}
           </div>
           <div style={{display:"flex",flexDirection:mob?"row":"column",alignItems:mob?"center":"flex-end",gap:4,flexWrap:"wrap"}}>
-            {!mob&&<div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{[[stats.n+" members",t.text2],[stats.nReal+" with gain data",t.text3],["Median +"+stats.median.toFixed(0)+"%",t.gain],[stats.aboveBenchPct+"% beat S&P",t.bench],["D +"+stats.medD.toFixed(0)+"%",t.dem],["R +"+stats.medR.toFixed(0)+"%",t.rep]].map(([v,c],i)=>(<div key={i} style={{fontSize:12,fontWeight:700,color:c}}>{v}</div>))}</div>}
+            {!mob&&<div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{[[stats.n+" members",t.text2],[stats.nReal+" with gain data",t.text3],["Median +"+stats.median.toFixed(0)+"%",t.gain],[stats.aboveBenchPct+"% beat S&P",t.bench],["D +"+stats.medD.toFixed(0)+"%",t.dem],["R +"+stats.medR.toFixed(0)+"%",t.rep]].map(([v,c],i)=>(<div key={i} style={{fontSize:13,fontWeight:700,color:c}}>{v}</div>))}</div>}
             <div style={{display:"flex",gap:3,flexWrap:"wrap"}}>
               {!mob&&<div onClick={()=>setShowMethod(true)} style={{...fb(false),cursor:"pointer"}}>Methods</div>}
               {!mob&&<div onClick={exportCSV} style={{...fb(false),cursor:"pointer"}}>Export CSV</div>}
@@ -918,17 +918,17 @@ export default function App(){
       </div>
 
       {/* Body */}
-      <div style={{flex:1,display:"flex",overflow:"hidden",position:"relative"}}>
+      <div style={{flex:1,display:"flex",overflow:"auto",position:"relative",minHeight:0}}>
         {view==="map"?(<>
           <div style={{flex:1,display:"flex",flexDirection:"column",padding:"4px 10px",overflow:"auto"}}>
             <div style={{display:"flex",gap:3,marginBottom:2,justifyContent:"space-between",alignItems:"center",flexWrap:"wrap"}}>
               <div style={{display:"flex",gap:3,alignItems:"center"}}>
                 {!mob&&<div style={fb(showScatter)} onClick={()=>setShowScatter(!showScatter)}>Scatter</div>}
-                {zoomed&&<div style={{padding:"6px 14px",cursor:"pointer",borderRadius:5,background:t.bgBtnA,color:t.textOnBtn,fontSize:13,fontWeight:700,fontFamily:"'Courier Prime',monospace",display:"flex",alignItems:"center",gap:5}} onClick={zoomOut}><span style={{fontSize:14}}>←</span>{mob?"Back":"National Map"}</div>}
+                {zoomed&&<div style={{padding:"6px 14px",cursor:"pointer",borderRadius:5,background:t.bgBtnA,color:t.textOnBtn,fontSize:14,fontWeight:700,fontFamily:"'Courier Prime',monospace",display:"flex",alignItems:"center",gap:5}} onClick={zoomOut}><span style={{fontSize:14}}>←</span>{mob?"Back":"National Map"}</div>}
                 <div style={{position:"relative"}}>
-                  <input type="text" placeholder={mob?"Search...":"Find a member..."} value={mapSearch} onChange={e=>setMapSearch(e.target.value)} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"4px 8px",color:t.text,fontSize:12.5,fontFamily:"'Courier Prime',monospace",outline:"none",width:mob?100:150}}/>
+                  <input type="text" placeholder={mob?"Search...":"Find a member..."} value={mapSearch} onChange={e=>setMapSearch(e.target.value)} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"4px 8px",color:t.text,fontSize:13.5,fontFamily:"'Courier Prime',monospace",outline:"none",width:mob?100:150}}/>
                   {mapResults.length>0&&<div style={{position:"absolute",top:"100%",left:mob?-60:0,zIndex:100,background:t.bgModal,border:`1px solid ${t.border}`,borderRadius:4,marginTop:2,width:mob?240:260,maxHeight:200,overflowY:"auto",boxShadow:"0 4px 12px rgba(0,0,0,0.15)"}}>
-                    {mapResults.map((m,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:5,padding:"5px 8px",cursor:"pointer",borderBottom:`1px solid ${t.borderLt}`,fontSize:12.5,fontFamily:"'Courier Prime',monospace"}} onMouseEnter={e=>{e.currentTarget.style.background=t.bgHover;}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";}} onClick={()=>{setDetail(m);if(geo&&geo[m.s])zoomToState(m.s);setMapSearch("");}}>
+                    {mapResults.map((m,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:5,padding:"5px 8px",cursor:"pointer",borderBottom:`1px solid ${t.borderLt}`,fontSize:13.5,fontFamily:"'Courier Prime',monospace"}} onMouseEnter={e=>{e.currentTarget.style.background=t.bgHover;}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";}} onClick={()=>{setDetail(m);if(geo&&geo[m.s])zoomToState(m.s);setMapSearch("");}}>
                       <div style={{width:3,height:14,borderRadius:1,background:pClr(t,m.p),flexShrink:0}}/>
                       <div style={{flex:1,minWidth:0}}><span style={{fontWeight:700,color:t.text}}>{m.nm}</span><span style={{color:t.text3,marginLeft:4}}>{m.ch==="S"?"Sen.":"Rep."} · {SN[m.s]}</span></div>
                       <span style={{color:t.text2,fontWeight:700,whiteSpace:"nowrap"}}>{fmt(m.cw)}</span>
@@ -936,16 +936,16 @@ export default function App(){
                   </div>}
                 </div>
               </div>
-              {!showScatter&&!zoomed&&!mob&&<div style={{display:"flex",gap:3}}><span style={{fontSize:11,color:t.text3,alignSelf:"center"}}>Map:</span>
+              {!showScatter&&!zoomed&&!mob&&<div style={{display:"flex",gap:3}}><span style={{fontSize:13,color:t.text3,alignSelf:"center"}}>Map:</span>
                 {[["heat","Wealth"],["party","Party"],["flat","Flat"]].map(([v,l])=>(<div key={v} style={fb(mapMode===v)} onClick={()=>setMapMode(v)}>{l}</div>))}</div>}
             </div>
 
             {showScatter?(<div style={{maxWidth:740,margin:"0 auto",width:"100%"}}>
-              <div style={{fontSize:12.5,color:t.text2,marginBottom:4}}>Annualized return vs. years in office. Dashed line = S&P 500. Dot size = net worth.</div>
+              <div style={{fontSize:13.5,color:t.text2,marginBottom:4}}>Annualized return vs. years in office. Dashed line = S&P 500. Dot size = net worth.</div>
               <Scatter data={ME} onDot={setDetail} cmpSet={cmpSet}/>
               <div style={{display:"flex",gap:12,justifyContent:"center",marginTop:4}}>
-                {[["dem","Democrat"],["rep","Republican"],["ind","Independent"]].map(([k,l])=>(<div key={k} style={{display:"flex",alignItems:"center",gap:4,fontSize:12,color:t.text2}}><div style={{width:8,height:8,borderRadius:"50%",background:t[k],opacity:.5}}/>{l}</div>))}
-                <div style={{display:"flex",alignItems:"center",gap:4,fontSize:12,color:t.bench}}><svg width={20} height={8}><line x1={0} y1={4} x2={20} y2={4} stroke={t.bench} strokeWidth={1.5} strokeDasharray="3,2"/></svg>S&P 500</div>
+                {[["dem","Democrat"],["rep","Republican"],["ind","Independent"]].map(([k,l])=>(<div key={k} style={{display:"flex",alignItems:"center",gap:4,fontSize:13,color:t.text2}}><div style={{width:8,height:8,borderRadius:"50%",background:t[k],opacity:.5}}/>{l}</div>))}
+                <div style={{display:"flex",alignItems:"center",gap:4,fontSize:13,color:t.bench}}><svg width={20} height={8}><line x1={0} y1={4} x2={20} y2={4} stroke={t.bench} strokeWidth={1.5} strokeDasharray="3,2"/></svg>S&P 500</div>
               </div>
             </div>):(
               loading?<div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",color:t.text3}}>Loading...</div>:geo?
@@ -980,7 +980,7 @@ export default function App(){
 
                   {/* State labels */}
                   {!zoomed&&Object.entries(geo).filter(([st])=>has(st)).map(([st,{centroid:c}])=>{if(!c||isNaN(c[0]))return null;
-                    return(<text key={`l-${st}`} x={c[0]} y={c[1]} textAnchor="middle" dominantBaseline="central" style={{fontSize:11,fill:sel===st?t.mapLA:t.mapL,fontFamily:"'Courier Prime',monospace",fontWeight:700,pointerEvents:"none"}}>{st}</text>);})}
+                    return(<text key={`l-${st}`} x={c[0]} y={c[1]} textAnchor="middle" dominantBaseline="central" style={{fontSize:13,fill:sel===st?t.mapLA:t.mapL,fontFamily:"'Courier Prime',monospace",fontWeight:700,pointerEvents:"none"}}>{st}</text>);})}
 
                   {/* Zoomed title */}
                   {zoomed&&sel&&geo[sel]&&(()=>{const{bounds:b}=geo[sel];return b?<text x={(b[0][0]+b[1][0])/2} y={b[0][1]-8} textAnchor="middle" style={{fontSize:14,fill:t.heading,fontFamily:"'Playfair Display',Georgia,serif",fontWeight:900}}>{SN[sel]}</text>:null;})()}
@@ -994,16 +994,16 @@ export default function App(){
                     const label=mem?`${mem.nm} (${mem.p}) — ${fmt(mem.cw)}`:distParty?`District ${parseInt(cd)} (${distParty})`:`District ${parseInt(cd)}`;
                     const w=Math.max(label.length*5.5,80);
                     return(<g><rect x={dObj.centroid[0]-w/2} y={dObj.centroid[1]-12} width={w} height={18} rx={3} fill={t.tipBg} stroke={t.tipBd} strokeWidth={.5} opacity={.95}/>
-                      <text x={dObj.centroid[0]} y={dObj.centroid[1]+1} textAnchor="middle" style={{fontSize:11,fill:t.text,fontFamily:"'Courier Prime',monospace",fontWeight:700}}>{label}</text></g>);
+                      <text x={dObj.centroid[0]} y={dObj.centroid[1]+1} textAnchor="middle" style={{fontSize:13,fill:t.text,fontFamily:"'Courier Prime',monospace",fontWeight:700}}>{label}</text></g>);
                   })()}
 
                   {/* National tooltip */}
                   {!zoomed&&hov&&has(hov)&&!sel&&geo[hov]&&(()=>{const{centroid:c}=geo[hov];if(!c||isNaN(c[0]))return null;const ss=stSt[hov];
-                    return(<g><rect x={c[0]-65} y={c[1]-38} width={130} height={30} rx={4} fill={t.tipBg} stroke={t.tipBd} strokeWidth={.8}/><text x={c[0]} y={c[1]-25} textAnchor="middle" style={{fontSize:12.5,fill:t.heading,fontFamily:"'Playfair Display',serif",fontWeight:700}}>{SN[hov]}</text><text x={c[0]} y={c[1]-14} textAnchor="middle" style={{fontSize:11,fill:t.text3,fontFamily:"'Courier Prime',monospace"}}>{ss?.n} members · avg +{ss?.avg.toFixed(0)}% · {fmt(ss?.total)}</text></g>);})()}
+                    return(<g><rect x={c[0]-65} y={c[1]-38} width={130} height={30} rx={4} fill={t.tipBg} stroke={t.tipBd} strokeWidth={.8}/><text x={c[0]} y={c[1]-25} textAnchor="middle" style={{fontSize:13.5,fill:t.heading,fontFamily:"'Playfair Display',serif",fontWeight:700}}>{SN[hov]}</text><text x={c[0]} y={c[1]-14} textAnchor="middle" style={{fontSize:13,fill:t.text3,fontFamily:"'Courier Prime',monospace"}}>{ss?.n} members · avg +{ss?.avg.toFixed(0)}% · {fmt(ss?.total)}</text></g>);})()}
                 </svg>:null
             )}
-            {!zoomed&&!sel&&!showScatter&&geo&&mapMode==="heat"&&<div style={{display:"flex",alignItems:"center",gap:5,justifyContent:"center",margin:"3px 0"}}><span style={{fontSize:11,color:t.text3}}>Low gain</span><div style={{width:90,height:5,borderRadius:3,background:`linear-gradient(to right, ${t.hL}, ${t.hH})`}}/><span style={{fontSize:11,color:t.text3}}>High gain</span></div>}
-            {!zoomed&&!sel&&!showScatter&&geo&&mapMode==="party"&&<div style={{display:"flex",alignItems:"center",gap:12,justifyContent:"center",margin:"3px 0"}}><div style={{display:"flex",alignItems:"center",gap:4}}><div style={{width:12,height:12,borderRadius:2,background:t.dem,opacity:.45}}/><span style={{fontSize:11.5,color:t.text2}}>Democrat majority</span></div><div style={{display:"flex",alignItems:"center",gap:4}}><div style={{width:12,height:12,borderRadius:2,background:t.rep,opacity:.45}}/><span style={{fontSize:11.5,color:t.text2}}>Republican majority</span></div></div>}
+            {!zoomed&&!sel&&!showScatter&&geo&&mapMode==="heat"&&<div style={{display:"flex",alignItems:"center",gap:5,justifyContent:"center",margin:"3px 0"}}><span style={{fontSize:13,color:t.text3}}>Low gain</span><div style={{width:90,height:5,borderRadius:3,background:`linear-gradient(to right, ${t.hL}, ${t.hH})`}}/><span style={{fontSize:13,color:t.text3}}>High gain</span></div>}
+            {!zoomed&&!sel&&!showScatter&&geo&&mapMode==="party"&&<div style={{display:"flex",alignItems:"center",gap:12,justifyContent:"center",margin:"3px 0"}}><div style={{display:"flex",alignItems:"center",gap:4}}><div style={{width:12,height:12,borderRadius:2,background:t.dem,opacity:.45}}/><span style={{fontSize:13,color:t.text2}}>Democrat majority</span></div><div style={{display:"flex",alignItems:"center",gap:4}}><div style={{width:12,height:12,borderRadius:2,background:t.rep,opacity:.45}}/><span style={{fontSize:13,color:t.text2}}>Republican majority</span></div></div>}
             {!sel&&!showScatter&&geo&&<div style={{maxWidth:740,width:"100%",margin:"6px auto 0"}}>
               {/* Market Analysis — lead element */}
               {(()=>{
@@ -1020,18 +1020,18 @@ export default function App(){
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
                     <div>
                       <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:mob?14:16,fontWeight:900,color:t.heading}}>Does Congress Beat the Market?</div>
-                      <div style={{fontSize:12.5,color:t.text2,marginTop:2}}>{real.length} members with comparable entry and current net worth data</div>
+                      <div style={{fontSize:13.5,color:t.text2,marginTop:2}}>{real.length} members with comparable entry and current net worth data</div>
                     </div>
                     <div style={{textAlign:"right",flexShrink:0,marginLeft:12,cursor:"pointer"}} onClick={()=>{setSort("aboveBench");setView("list");}}>
                       <div style={{fontSize:mob?24:32,fontWeight:900,color:t.loss,lineHeight:1}}>{beatPct}%</div>
-                      <div style={{fontSize:12,color:t.text3}}>beat S&P</div>
-                      <div style={{fontSize:10,color:t.bench,marginTop:2}}>View ranking →</div>
+                      <div style={{fontSize:13,color:t.text3}}>beat S&P</div>
+                      <div style={{fontSize:12,color:t.bench,marginTop:2}}>View ranking →</div>
                     </div>
                   </div>
                   <div style={{display:"flex",alignItems:"flex-end",gap:3,height:mob?50:65,marginBottom:4}}>
                     {buckets.map((b,i)=>{const h=maxC?Math.max(3,b.count/maxC*(mob?45:60)):3;const isNeg=b.max<=0;
                       return(<div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:2,cursor:b.count?"pointer":"default",opacity:1,transition:"opacity .15s"}} onClick={()=>{if(!b.count)return;setAlphaRange({min:b.min,max:b.max,label:b.label});setSort("aboveBench");setView("list");}} onMouseEnter={e=>{if(b.count)e.currentTarget.style.opacity=".7";}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";}}>
-                        <div style={{fontSize:12,color:t.text2,fontWeight:700}}>{b.count}</div>
+                        <div style={{fontSize:13,color:t.text2,fontWeight:700}}>{b.count}</div>
                         <div style={{width:"100%",height:h,borderRadius:3,background:isNeg?t.loss+"99":t.gain+"99"}}/>
                       </div>);})}
                   </div>
@@ -1040,12 +1040,12 @@ export default function App(){
                   </div>
                   <div style={{display:mob?"none":"flex",gap:16,marginBottom:8}}>
                     <div style={{flex:1,padding:"8px 12px",background:t.bgHover,borderRadius:5,cursor:"pointer",transition:"opacity .15s"}} onClick={()=>{setPf("D");setSort("aboveBench");setView("list");}} onMouseEnter={e=>{e.currentTarget.style.opacity=".8";}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";}}>
-                      <div style={{fontSize:12,color:t.dem,fontWeight:700,textTransform:"uppercase",letterSpacing:".05em"}}>Democrats</div>
-                      <div style={{fontSize:14,fontWeight:900,color:t.text,marginTop:2}}>{dReal.length?Math.round(dBeat/dReal.length*100):0}%<span style={{fontSize:12,color:t.text3,fontWeight:400,marginLeft:4}}>beat S&P ({dBeat}/{dReal.length})</span></div>
+                      <div style={{fontSize:13,color:t.dem,fontWeight:700,textTransform:"uppercase",letterSpacing:".05em"}}>Democrats</div>
+                      <div style={{fontSize:14,fontWeight:900,color:t.text,marginTop:2}}>{dReal.length?Math.round(dBeat/dReal.length*100):0}%<span style={{fontSize:13,color:t.text3,fontWeight:400,marginLeft:4}}>beat S&P ({dBeat}/{dReal.length})</span></div>
                     </div>
                     <div style={{flex:1,padding:"8px 12px",background:t.bgHover,borderRadius:5,cursor:"pointer",transition:"opacity .15s"}} onClick={()=>{setPf("R");setSort("aboveBench");setView("list");}} onMouseEnter={e=>{e.currentTarget.style.opacity=".8";}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";}}>
-                      <div style={{fontSize:12,color:t.rep,fontWeight:700,textTransform:"uppercase",letterSpacing:".05em"}}>Republicans</div>
-                      <div style={{fontSize:14,fontWeight:900,color:t.text,marginTop:2}}>{rReal.length?Math.round(rBeat/rReal.length*100):0}%<span style={{fontSize:12,color:t.text3,fontWeight:400,marginLeft:4}}>beat S&P ({rBeat}/{rReal.length})</span></div>
+                      <div style={{fontSize:13,color:t.rep,fontWeight:700,textTransform:"uppercase",letterSpacing:".05em"}}>Republicans</div>
+                      <div style={{fontSize:14,fontWeight:900,color:t.text,marginTop:2}}>{rReal.length?Math.round(rBeat/rReal.length*100):0}%<span style={{fontSize:13,color:t.text3,fontWeight:400,marginLeft:4}}>beat S&P ({rBeat}/{rReal.length})</span></div>
                     </div>
                   </div>
                   <div style={{fontSize:mob?9:10,color:t.text2,lineHeight:1.7}}>
@@ -1072,8 +1072,8 @@ export default function App(){
                     underwater>0?{icon:"🔻",head:`${underwater} members are underwater`,body:`Negative net worth — mortgages, student loans, and credit card debt exceeding assets.`,color:t.loss}:null,
                   ].filter(Boolean).slice(0,mob?2:4);
                   return stories.map((s,i)=>(<div key={i} onClick={()=>{if(s.m)setDetail(s.m);else if(s.action)s.action();}} style={{padding:"10px 12px",background:t.statBg,borderRadius:6,border:`1px solid ${t.borderLt}`,cursor:(s.m||s.action)?"pointer":"default",transition:"background .15s"}} onMouseEnter={e=>{if(s.m||s.action)e.currentTarget.style.background=t.bgHover;}} onMouseLeave={e=>{e.currentTarget.style.background=t.statBg;}}>
-                    <div style={{fontSize:13.5,fontWeight:700,color:s.color,fontFamily:"'Courier Prime',monospace"}}>{s.icon} {s.head}</div>
-                    <div style={{fontSize:12.5,color:t.text2,marginTop:3,lineHeight:1.5,fontFamily:"'Courier Prime',monospace"}}>{s.body}</div>
+                    <div style={{fontSize:14,fontWeight:700,color:s.color,fontFamily:"'Courier Prime',monospace"}}>{s.icon} {s.head}</div>
+                    <div style={{fontSize:13.5,color:t.text2,marginTop:3,lineHeight:1.5,fontFamily:"'Courier Prime',monospace"}}>{s.body}</div>
                   </div>));
                 })()}
               </div>
@@ -1088,13 +1088,13 @@ export default function App(){
                   const rows=[["Median NW",fmt(dMedNW),fmt(rMedNW)],["Median Gain","+"+dMedG.toFixed(0)+"%","+"+rMedG.toFixed(0)+"%"],["Beat S&P",Math.round(dAbv/ds.length*100)+"%",Math.round(rAbv/rs.length*100)+"%"],["Members",ds.length+"",rs.length+""]];
                   return(<>
                     <div style={{padding:"8px 12px"}}>
-                      <div style={{fontSize:12,color:t.dem,fontWeight:700,textTransform:"uppercase",letterSpacing:".06em",marginBottom:4}}>Democrats</div>
-                      {rows.map(([l,d],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"3px 0",fontSize:13,fontFamily:"'Courier Prime',monospace"}}><span style={{color:t.text3}}>{l}</span><span style={{color:t.text,fontWeight:700}}>{d}</span></div>))}
+                      <div style={{fontSize:13,color:t.dem,fontWeight:700,textTransform:"uppercase",letterSpacing:".06em",marginBottom:4}}>Democrats</div>
+                      {rows.map(([l,d],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"3px 0",fontSize:14,fontFamily:"'Courier Prime',monospace"}}><span style={{color:t.text3}}>{l}</span><span style={{color:t.text,fontWeight:700}}>{d}</span></div>))}
                     </div>
                     <div style={{width:1,background:t.borderLt,margin:"8px 0"}}/>
                     <div style={{padding:"8px 12px"}}>
-                      <div style={{fontSize:12,color:t.rep,fontWeight:700,textTransform:"uppercase",letterSpacing:".06em",marginBottom:4}}>Republicans</div>
-                      {rows.map(([l,,r],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"3px 0",fontSize:13,fontFamily:"'Courier Prime',monospace"}}><span style={{color:t.text3}}>{l}</span><span style={{color:t.text,fontWeight:700}}>{r}</span></div>))}
+                      <div style={{fontSize:13,color:t.rep,fontWeight:700,textTransform:"uppercase",letterSpacing:".06em",marginBottom:4}}>Republicans</div>
+                      {rows.map(([l,,r],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"3px 0",fontSize:14,fontFamily:"'Courier Prime',monospace"}}><span style={{color:t.text3}}>{l}</span><span style={{color:t.text,fontWeight:700}}>{r}</span></div>))}
                     </div>
                   </>);
                 })()}
@@ -1109,7 +1109,7 @@ export default function App(){
         </>):view==="committees"?(
           <div style={{flex:1,padding:mob?"8px 10px":"10px 18px",overflow:"auto"}}>
             <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:mob?14:16,fontWeight:900,color:t.heading,marginBottom:4}}>Committee × Sector Overlap</div>
-            <div style={{fontSize:12.5,color:t.text2,marginBottom:12,lineHeight:1.6,maxWidth:600}}>Do members' investments align with the industries their committees regulate? Asset data available for the 45 wealthiest members.</div>
+            <div style={{fontSize:13.5,color:t.text2,marginBottom:12,lineHeight:1.6,maxWidth:600}}>Do members' investments align with the industries their committees regulate? Asset data available for the 45 wealthiest members.</div>
             {(()=>{
               const COMM_NAMES={"FinSvc":"Financial Services","Armed":"Armed Services","E&C":"Energy & Commerce","Banking":"Banking","Intel":"Intelligence","Judiciary":"Judiciary","Foreign":"Foreign Affairs","ForeignRel":"Foreign Relations","Approp":"Appropriations","Budget":"Budget","W&M":"Ways & Means","Agric":"Agriculture","Veterans":"Veterans' Affairs","Energy":"Energy/Natural Resources","HELP":"Health/Education/Labor","HomeSec":"Homeland Security","HSGAC":"Homeland Security (Senate)","Oversight":"Oversight","NatRes":"Natural Resources","Commerce":"Commerce/Science/Transport","EPW":"Environment/Public Works","Finance":"Finance","SciTech":"Science/Space/Tech","T&I":"Transportation","SmBiz":"Small Business","Rules":"Rules","Educ":"Education","HouseAdmin":"House Admin"};
               const SECTOR_RISK={"FinSvc":["Finance","Crypto"],"Armed":["Defense","Tech"],"E&C":["Energy","Tech","Telecom","Healthcare"],"Banking":["Finance","RealEstate","Crypto"],"Intel":["Tech","Defense"],"Agric":["Agriculture"],"Energy":["Energy"],"HELP":["Healthcare"],"HomeSec":["Defense","Tech"],"HSGAC":["Defense","Tech"],"Commerce":["Telecom","Tech","Consumer"],"Finance":["Finance","Crypto"],"SciTech":["Tech"],"NatRes":["Energy","Agriculture"],"EPW":["Energy","Industrial"]};
@@ -1142,26 +1142,26 @@ export default function App(){
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
                     <div>
                       <div style={{fontSize:14,fontWeight:700,color:t.heading}}>{r.name}</div>
-                      <div style={{fontSize:11.5,color:t.text3,marginTop:1}}>{r.total} members · {r.withAssets} with asset data · <span style={{color:t.loss,fontWeight:700}}>{r.flagged.length} with sector overlap</span>{r.tripleCount>0&&<span style={{color:t.loss,fontWeight:900}}> · {r.tripleCount} triple overlap</span>}</div>
+                      <div style={{fontSize:13,color:t.text3,marginTop:1}}>{r.total} members · {r.withAssets} with asset data · <span style={{color:t.loss,fontWeight:700}}>{r.flagged.length} with sector overlap</span>{r.tripleCount>0&&<span style={{color:t.loss,fontWeight:900}}> · {r.tripleCount} triple overlap</span>}</div>
                     </div>
-                    <div style={{display:"flex",gap:4}}>{r.riskSectors.map((s,i)=>(<span key={i} style={{padding:"2px 6px",borderRadius:3,fontSize:11,fontWeight:700,background:SEC_CLR[s]||"#94a3b8",color:"#fff"}}>{s}</span>))}</div>
+                    <div style={{display:"flex",gap:4}}>{r.riskSectors.map((s,i)=>(<span key={i} style={{padding:"2px 6px",borderRadius:3,fontSize:13,fontWeight:700,background:SEC_CLR[s]||"#94a3b8",color:"#fff"}}>{s}</span>))}</div>
                   </div>
                   <div style={{display:"flex",flexDirection:"column",gap:3}}>
                     {r.flagged.map((m,mi)=>(<div key={mi} style={{display:"flex",alignItems:"center",gap:8,padding:"5px 8px",background:t.bgHover,borderRadius:4,cursor:"pointer"}} onClick={()=>setDetail(m)}>
                       {m.bg&&<img src={`https://bioguide.congress.gov/bioguide/photo/${m.bg[0]}/${m.bg}.jpg`} style={{width:24,height:24,borderRadius:"50%",objectFit:"cover",border:`1.5px solid ${pClr(t,m.p)}`}} onError={e=>{e.target.style.display="none";}}/>}
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{display:"flex",alignItems:"center",gap:4,flexWrap:"wrap"}}>
-                          <span style={{fontSize:13.5,fontWeight:700,color:t.text}}>{m.nm}</span>
-                          <span style={{fontSize:11.5,color:t.text3}}>{m.p} · {SN[m.s]}</span>
-                          {TXNS[m.nm+"|"+m.s]&&(()=>{const ct=parseInt(TXNS[m.nm+"|"+m.s].split(";")[0]);return ct>0?<span style={{padding:"1px 5px",borderRadius:3,fontSize:10.5,fontWeight:700,background:t.warn,color:"#fff"}}>{ct} trades</span>:null;})()}
-                          {m.donorOverlap&&m.donorOverlap.length>0&&<span style={{padding:"1px 5px",borderRadius:3,fontSize:10.5,fontWeight:700,background:"#7c3aed",color:"#fff"}}>donors</span>}
-                          {m.donorOverlap&&m.donorOverlap.length>0&&TXNS[m.nm+"|"+m.s]&&parseInt(TXNS[m.nm+"|"+m.s].split(";")[0])>0&&<span style={{padding:"1px 5px",borderRadius:3,fontSize:10.5,fontWeight:900,background:t.loss,color:"#fff",letterSpacing:".03em"}}>TRIPLE</span>}
+                          <span style={{fontSize:14,fontWeight:700,color:t.text}}>{m.nm}</span>
+                          <span style={{fontSize:13,color:t.text3}}>{m.p} · {SN[m.s]}</span>
+                          {TXNS[m.nm+"|"+m.s]&&(()=>{const ct=parseInt(TXNS[m.nm+"|"+m.s].split(";")[0]);return ct>0?<span style={{padding:"1px 5px",borderRadius:3,fontSize:13,fontWeight:700,background:t.warn,color:"#fff"}}>{ct} trades</span>:null;})()}
+                          {m.donorOverlap&&m.donorOverlap.length>0&&<span style={{padding:"1px 5px",borderRadius:3,fontSize:13,fontWeight:700,background:"#7c3aed",color:"#fff"}}>donors</span>}
+                          {m.donorOverlap&&m.donorOverlap.length>0&&TXNS[m.nm+"|"+m.s]&&parseInt(TXNS[m.nm+"|"+m.s].split(";")[0])>0&&<span style={{padding:"1px 5px",borderRadius:3,fontSize:13,fontWeight:900,background:t.loss,color:"#fff",letterSpacing:".03em"}}>TRIPLE</span>}
                         </div>
                       </div>
                       <div style={{display:"flex",gap:3,alignItems:"center"}}>
-                        {m.overlapSectors.map((s,si)=>(<span key={si} style={{padding:"1px 5px",borderRadius:3,fontSize:11,fontWeight:700,background:SEC_CLR[s.sector]||"#94a3b8",color:"#fff"}}>{s.sector} {s.pct}%</span>))}
+                        {m.overlapSectors.map((s,si)=>(<span key={si} style={{padding:"1px 5px",borderRadius:3,fontSize:13,fontWeight:700,background:SEC_CLR[s.sector]||"#94a3b8",color:"#fff"}}>{s.sector} {s.pct}%</span>))}
                       </div>
-                      <div style={{fontSize:13,fontWeight:700,color:t.loss,minWidth:40,textAlign:"right"}}>{m.overlapPct}%</div>
+                      <div style={{fontSize:14,fontWeight:700,color:t.loss,minWidth:40,textAlign:"right"}}>{m.overlapPct}%</div>
                     </div>))}
                   </div>
                 </div>))}
@@ -1175,27 +1175,27 @@ export default function App(){
               <input type="text" placeholder={mob?"Search...":"Search name, state..."} value={search} onChange={e=>setSearch(e.target.value)} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"5px 10px",color:t.text,fontSize:mob?10:10.5,fontFamily:"'Courier Prime',monospace",outline:"none",width:mob?120:180}}/>
               <div style={{display:"flex",gap:2}}>{[["all","All"],["D","D"],["R","R"]].map(([v,l])=>(<div key={v} style={fb(pf===v)} onClick={()=>setPf(v)}>{l}</div>))}{!mob&&<div style={fb(pf==="I")} onClick={()=>setPf("I")}>Ind</div>}</div>
               {!mob&&<div style={{display:"flex",gap:2}}>{[["all","Both"],["Senate","Senate"],["House","House"]].map(([v,l])=>(<div key={v} style={fb(cf===v)} onClick={()=>setCf(v)}>{l}</div>))}</div>}
-              {!mob&&<select value={cmf} onChange={e=>setCmf(e.target.value)} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"3px 6px",color:t.text,fontSize:12,fontFamily:"'Courier Prime',monospace",outline:"none"}}>
+              {!mob&&<select value={cmf} onChange={e=>setCmf(e.target.value)} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"3px 6px",color:t.text,fontSize:13,fontFamily:"'Courier Prime',monospace",outline:"none"}}>
                 <option value="all">All Committees</option>
                 {[["Approp","Appropriations"],["Agric","Agriculture"],["Armed","Armed Services"],["Banking","Banking"],["Budget","Budget"],["Commerce","Commerce/Sci/Trans"],["E&C","Energy & Commerce"],["Educ","Education"],["Energy","Energy/Nat Resources"],["EPW","Environment/Public Works"],["Finance","Finance"],["FinSvc","Financial Services"],["Foreign","Foreign Affairs"],["ForeignRel","Foreign Relations"],["HELP","Health/Educ/Labor"],["HomeSec","Homeland Security"],["HSGAC","Homeland Security (Senate)"],["Intel","Intelligence"],["Judiciary","Judiciary"],["NatRes","Natural Resources"],["Oversight","Oversight"],["Rules","Rules"],["SciTech","Science/Space/Tech"],["SmBiz","Small Business"],["T&I","Transportation"],["Veterans","Veterans' Affairs"],["W&M","Ways & Means"]].map(([v,l])=>(<option key={v} value={v}>{l}</option>))}
               </select>}
-              <div style={{marginLeft:"auto",display:"flex",gap:2,alignItems:"center"}}><span style={{fontSize:11,color:t.text3}}>Sort:</span>
+              <div style={{marginLeft:"auto",display:"flex",gap:2,alignItems:"center"}}><span style={{fontSize:13,color:t.text3}}>Sort:</span>
                 {(mob?[["currentWorth","$"],["pctChange","%"],["name","A-Z"]]:[["annualized","Ann %"],["aboveBench","vs S&P"],["pctChange","Total %"],["currentWorth","Worth"],["name","Name"]]).map(([v,l])=>(<div key={v} style={fb(sort===v)} onClick={()=>setSort(v)}>{l}</div>))}</div>
             </div>
-            {cmf!=="all"&&<div style={{fontSize:12,color:t.text3,marginBottom:6,fontFamily:"'Courier Prime',monospace"}}>{filtered.length} members on this committee · Total wealth: {fmt(filtered.reduce((s,m)=>s+m.cw,0))}</div>}
+            {cmf!=="all"&&<div style={{fontSize:13,color:t.text3,marginBottom:6,fontFamily:"'Courier Prime',monospace"}}>{filtered.length} members on this committee · Total wealth: {fmt(filtered.reduce((s,m)=>s+m.cw,0))}</div>}
             {alphaRange&&<div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8,padding:"6px 10px",background:t.benchBg,border:`1px solid ${t.bench}33`,borderRadius:5}}>
-              <div style={{fontSize:12.5,color:t.bench,fontWeight:700}}>Alpha: {alphaRange.label}</div>
-              <div style={{fontSize:12,color:t.text2}}>{filtered.length} members with annualized return {alphaRange.min>0?"above":"below"} S&P by {alphaRange.label}</div>
-              <div onClick={()=>setAlphaRange(null)} style={{marginLeft:"auto",cursor:"pointer",padding:"2px 8px",borderRadius:3,background:t.bgAlt,color:t.text2,fontSize:12,fontWeight:700,border:`1px solid ${t.border}`}}>Clear ×</div>
+              <div style={{fontSize:13.5,color:t.bench,fontWeight:700}}>Alpha: {alphaRange.label}</div>
+              <div style={{fontSize:13,color:t.text2}}>{filtered.length} members with annualized return {alphaRange.min>0?"above":"below"} S&P by {alphaRange.label}</div>
+              <div onClick={()=>setAlphaRange(null)} style={{marginLeft:"auto",cursor:"pointer",padding:"2px 8px",borderRadius:3,background:t.bgAlt,color:t.text2,fontSize:13,fontWeight:700,border:`1px solid ${t.border}`}}>Clear ×</div>
             </div>}
             <div>
-            <div style={{display:"flex",alignItems:"center",gap:6,padding:mob?"6px 10px":"6px 12px",fontSize:11.5,color:t.text3,textTransform:"uppercase",letterSpacing:".05em",borderBottom:`1px solid ${t.border}`,fontWeight:700}}>
+            <div style={{display:"flex",alignItems:"center",gap:6,padding:mob?"6px 10px":"6px 12px",fontSize:13,color:t.text3,textTransform:"uppercase",letterSpacing:".05em",borderBottom:`1px solid ${t.border}`,fontWeight:700}}>
               <div style={{width:mob?3:20,flexShrink:0}}/><div style={{flex:1}}>Member</div>{!mob&&<div style={{width:68,textAlign:"right",flexShrink:0}}>Entry</div>}<div style={{width:mob?60:68,textAlign:"right",flexShrink:0}}>{mob?"NW":"Current"}</div>{!mob&&<div style={{width:52,textAlign:"right",flexShrink:0}}>Ann %</div>}<div style={{width:mob?44:52,textAlign:"right",flexShrink:0}}>Total</div>
             </div>
             <div>{filtered.map((m,i)=><Row key={i} m={m} onClick={()=>{setSel(m.s);setView("map");if(geo&&geo[m.s])zoomToState(m.s);}} onName={setDetail}/>)}</div>
             {filtered.length===0&&<div style={{padding:20,textAlign:"center",color:t.text3}}>No results.</div>}
             </div>
-            <div style={{display:"flex",gap:8,marginTop:10,fontSize:11.5,color:t.text3,lineHeight:1.5,flexWrap:"wrap"}}>
+            <div style={{display:"flex",gap:8,marginTop:10,fontSize:13,color:t.text3,lineHeight:1.5,flexWrap:"wrap"}}>
               <div>{filtered.length} of {ME.length}.</div>
               <div style={{display:"flex",gap:6}}>{[["W","Sourced"],["E","Estimated"],["M","Media"]].map(([k,l])=>(<div key={k} style={{display:"flex",alignItems:"center",gap:3}}><div style={{width:5,height:5,borderRadius:"50%",background:t["src"+k]}}/>{l}</div>))}</div>
             </div>
