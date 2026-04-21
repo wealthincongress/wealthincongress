@@ -870,14 +870,14 @@ export default function App(){
   const tab=a=>({padding:"5px 12px",fontSize:16,fontWeight:700,letterSpacing:".04em",textTransform:"uppercase",cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:a?`1px solid ${t.bgBtnA}`:`1px solid ${t.borderLt}`,fontFamily:"'IBM Plex Mono',ui-monospace,monospace"});
   const fb=a=>({padding:"3px 8px",fontSize:15,cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:`1px solid ${a?t.bgBtnA:t.borderLt}`,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",fontWeight:700});
 
-  const Card=({title,list,metric})=>(<div style={{flex:1,minWidth:mob?140:170}}>
-    <div style={{fontSize:15,color:t.text3,textTransform:"uppercase",letterSpacing:".06em",marginBottom:4,fontWeight:700}}>{title}</div>
+  const Card=({title,list,metric})=>(<div style={{flex:1,minWidth:mob?160:210}}>
+    <div style={{fontSize:14,color:t.text3,textTransform:"uppercase",letterSpacing:".06em",marginBottom:4,fontWeight:700}}>{title}</div>
     {list.map((m,i)=>{const v=metric==="ann"?(m.ann?.toFixed(1)+"%/yr"):metric==="bench"?((m.aboveBench>=0?"+":"")+m.aboveBench?.toFixed(1)+" pp"):metric==="rich"?fmt(m.cw):metric==="lowest"?("+"+m.pct.toFixed(0)+"% / "+m.yrs+"yr"):("+"+fmt(m.gain));
       return(<div key={i} style={{display:"flex",alignItems:"center",gap:5,padding:"4px 8px",background:t.bgAlt,borderRadius:4,marginBottom:3,border:`1px solid ${t.borderLt}`,cursor:"pointer"}} onClick={()=>setDetail(m)}>
-        <div style={{fontSize:16,fontWeight:700,color:t.textM,width:12,textAlign:"right"}}>{i+1}</div>
+        <div style={{fontSize:14,fontWeight:700,color:t.textM,width:12,textAlign:"right",flexShrink:0}}>{i+1}</div>
         <div style={{width:3,height:16,borderRadius:1,background:pClr(t,m.p),flexShrink:0}}/>
-        <div style={{flex:1,minWidth:0}}><div style={{fontSize:16,fontWeight:700,color:t.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.nm}</div><div style={{fontSize:15,color:t.text3}}>{SN[m.s]} · {m.yrs}yr</div></div>
-        <div style={{fontSize:16,fontWeight:700,color:metric==="lowest"?t.text2:metric==="bench"?(m.aboveBench>=0?t.gain:t.loss):metric==="ann"?t.gain:t.text2,whiteSpace:"nowrap"}}>{v}</div>
+        <div style={{flex:1,minWidth:0,overflow:"hidden"}}><div style={{fontSize:15,fontWeight:700,color:t.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.nm}</div><div style={{fontSize:13,color:t.text3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{SN[m.s]} · {m.yrs}yr</div></div>
+        <div style={{fontSize:14,fontWeight:700,color:metric==="lowest"?t.text2:metric==="bench"?(m.aboveBench>=0?t.gain:t.loss):metric==="ann"?t.gain:t.text2,whiteSpace:"nowrap",flexShrink:0}}>{v}</div>
       </div>);})}
   </div>);
 
