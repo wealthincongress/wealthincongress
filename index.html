@@ -81,6 +81,16 @@
       .noscript-content h2 { font-size: 20px; margin: 24px 0 8px; }
       .noscript-content p { margin-bottom: 12px; }
 
+      [role="button"]:focus-visible,
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 3px solid #2563eb;
+        outline-offset: 2px;
+        border-radius: 3px;
+      }
+
       @media print {
         body { background: white !important; color: black !important; font-family: Georgia, serif !important; }
         #root { min-height: auto !important; }
