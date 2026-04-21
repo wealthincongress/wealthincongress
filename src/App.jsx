@@ -601,14 +601,14 @@ const ME=MR.map(enrich);
 const pClr=(t,p)=>t[p==="D"?"dem":p==="R"?"rep":"ind"];
 
 /* ═══════ MEMBER DETAIL ═══════ */
-function MemberDetail({m,onClose,onCompare,comparing}){const t=useT();
+function MemberDetail({m,onClose,onCompare,onShare,comparing}){const t=useT();
   const noGain=m.ew===m.cw;
   const benchW=m.ew>0&&!noGain?m.ew*Math.pow(1+m.bench/100,m.yrs):null;
   const items=[["State",SN[m.s]||m.s],["Chamber",m.ch==="S"?"U.S. Senate":m.d?"U.S. House, Dist. "+m.d:"U.S. House"],["Party",m.p==="D"?"Democrat":m.p==="R"?"Republican":"Independent"],["Entered",m.y],["Years",m.yrs],["Entry Net Worth",fmt(m.ew)],["Current Net Worth",fmt(m.cw)],["Total Gain",noGain?"--":fmt(m.gain)],["Total %",noGain?"--":m.noPct?"N/A":(m.pct>=0?"+":"")+m.pct.toFixed(1)+"%"],["Annualized",noGain?"--":m.noPct?"N/A":m.ann!=null?m.ann.toFixed(1)+"%/yr":"N/A"],["S&P Benchmark",m.bench.toFixed(1)+"%/yr"],["vs. Benchmark",noGain?"--":m.noPct?"N/A":m.aboveBench!=null?(m.aboveBench>=0?"+":"")+m.aboveBench.toFixed(1)+" pp":"N/A"],["If S&P Only",benchW?fmt(benchW):"--"],["Salary-Years",noGain?"--":m.gain>0?m.salYrs.toFixed(1)+" years":"--"],["Wealth Source",m.nt||"--"]];
   return(<div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:t.mob?"flex-end":"center",justifyContent:"center",background:t.bgModalOv,backdropFilter:"blur(4px)"}} onClick={onClose}><div style={{background:t.bgModal,border:t.mob?"none":`1px solid ${t.border}`,borderRadius:t.mob?"12px 12px 0 0":10,padding:t.mob?"18px 16px 24px":"24px 28px",maxWidth:t.mob?"100%":460,width:t.mob?"100%":"92%",maxHeight:t.mob?"92vh":"85vh",overflowY:"auto",fontFamily:"'IBM Plex Mono',ui-monospace,monospace",color:t.text}} onClick={e=>e.stopPropagation()}>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:t.mob?10:14}}>
       <div style={{display:"flex",alignItems:"center",gap:8}}>{m.bg&&<img src={`https://bioguide.congress.gov/bioguide/photo/${m.bg[0]}/${m.bg}.jpg`} alt="" style={{width:t.mob?40:48,height:t.mob?40:48,borderRadius:"50%",objectFit:"cover",border:`2px solid ${pClr(t,m.p)}`,flexShrink:0}} onError={e=>{e.target.style.display="none";}}/>}<div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:t.mob?18:22,fontWeight:900,color:t.heading}}>{m.nm} <span style={{fontFamily:"'IBM Plex Mono',ui-monospace,monospace",fontSize:t.mob?13:15,fontWeight:700,color:pClr(t,m.p),padding:"1px 6px",border:`1.5px solid ${pClr(t,m.p)}`,borderRadius:3,verticalAlign:"middle",marginLeft:6}}>{m.p}</span></div>{m.cm&&<div style={{fontSize:15,color:t.text3,marginTop:2,lineHeight:1.5}}>{m.cm.split(";").join(" · ")}</div>}</div></div>
-      <div style={{display:"flex",gap:6}}>{onCompare&&<div role="button" tabIndex={0} aria-label={comparing?"Remove from compare":"Add to compare"} onClick={e=>{e.stopPropagation();onCompare(m);}} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();onCompare(m);}}} style={{cursor:"pointer",padding:"4px 10px",borderRadius:4,background:comparing?t.loss:t.bgAlt,color:comparing?t.textOnBtn:t.text2,fontSize:15,fontWeight:700,border:`1px solid ${t.border}`}}>{comparing?"Remove":"Compare"}</div>}<div role="button" tabIndex={0} aria-label="Close" onClick={onClose} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onClose();}}} style={{cursor:"pointer",width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:t.bgAlt,color:t.text2,fontSize:17,border:`1px solid ${t.border}`}}>×</div></div>
+      <div style={{display:"flex",gap:6}}>{onShare&&<div role="button" tabIndex={0} aria-label="Share this member" onClick={e=>{e.stopPropagation();onShare(m);}} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();onShare(m);}}} style={{cursor:"pointer",padding:"4px 10px",borderRadius:4,background:t.bgAlt,color:t.text2,fontSize:15,fontWeight:700,border:`1px solid ${t.border}`}}>Share</div>}{onCompare&&<div role="button" tabIndex={0} aria-label={comparing?"Remove from compare":"Add to compare"} onClick={e=>{e.stopPropagation();onCompare(m);}} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();onCompare(m);}}} style={{cursor:"pointer",padding:"4px 10px",borderRadius:4,background:comparing?t.loss:t.bgAlt,color:comparing?t.textOnBtn:t.text2,fontSize:15,fontWeight:700,border:`1px solid ${t.border}`}}>{comparing?"Remove":"Compare"}</div>}<div role="button" tabIndex={0} aria-label="Close" onClick={onClose} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onClose();}}} style={{cursor:"pointer",width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:t.bgAlt,color:t.text2,fontSize:17,border:`1px solid ${t.border}`}}>×</div></div>
     </div>
     <div style={{display:"flex",gap:2,marginBottom:14}}>{[["Entry ("+m.y+")",fmt(m.ew),t.text2],["Current",fmt(m.cw),t.text],["Change",noGain?"--":m.noPct?"N/A":(m.pct>=0?"+":"")+m.pct.toFixed(0)+"%",noGain||m.noPct?t.text3:m.pct>=0?t.gain:t.loss]].map(([l,v,c],i)=>(<div key={i} style={{flex:1,padding:"10px 12px",background:t.statBg,borderRadius:6}}><div style={{fontSize:15,color:t.text3,textTransform:"uppercase",letterSpacing:".06em"}}>{l}</div><div style={{fontSize:18,fontWeight:700,color:c,marginTop:4}}>{v}</div></div>))}</div>
     {noGain&&<div style={{padding:"10px 14px",background:t.statBg,borderRadius:6,marginBottom:12,fontSize:15,color:t.text3,lineHeight:1.6}}>Only one financial disclosure on file — gain data requires an entry filing and a later filing to compare. {m.yrs<=2?"This member entered office recently.":"Entry and current filings report the same net worth."}</div>}
@@ -723,6 +723,15 @@ function MemberDetail({m,onClose,onCompare,comparing}){const t=useT();
       </div>);
     })()}
     {items.map(([l,v],i)=>(<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`1px solid ${t.borderLt}`,fontSize:16}}><span style={{color:t.text3}}>{l}</span><span style={{color:t.text,fontWeight:600,textAlign:"right",maxWidth:"58%"}}>{v}</span></div>))}
+    <div style={{marginTop:14,paddingTop:12,borderTop:`1px solid ${t.border}`,fontSize:13,color:t.text3,lineHeight:1.6}}>
+      <div style={{textTransform:"uppercase",letterSpacing:".06em",fontSize:12,marginBottom:6,fontWeight:700}}>Primary Sources</div>
+      <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+        {m.bg&&<a href={`https://bioguide.congress.gov/search/bio/${m.bg}`} target="_blank" rel="noopener noreferrer" style={{color:t.bench,textDecoration:"none"}}>Bioguide →</a>}
+        {m.ch==="S"?<a href="https://efdsearch.senate.gov/search/" target="_blank" rel="noopener noreferrer" style={{color:t.bench,textDecoration:"none"}}>Senate EFDS filings →</a>:<a href="https://disclosures-clerk.house.gov/FinancialDisclosure" target="_blank" rel="noopener noreferrer" style={{color:t.bench,textDecoration:"none"}}>House Clerk filings →</a>}
+        {(TXNS[m.nm+"|"+m.s])&&<a href={m.ch==="S"?"https://efdsearch.senate.gov/search/":"https://disclosures-clerk.house.gov/FinancialDisclosure"} target="_blank" rel="noopener noreferrer" style={{color:t.bench,textDecoration:"none"}}>STOCK Act PTRs →</a>}
+        {(CFIN[m.nm+"|"+m.s])&&<a href={`https://www.fec.gov/data/candidates/?search=${encodeURIComponent(m.nm)}`} target="_blank" rel="noopener noreferrer" style={{color:t.bench,textDecoration:"none"}}>FEC filings →</a>}
+      </div>
+    </div>
   </div></div>);
 }
 
@@ -903,6 +912,23 @@ export default function App(){
   const top5=k=>{const base=k==="rich"?[...ME].filter(m=>m.cw>0):[...ME].filter(m=>m.ew>0&&m.yrs>0&&m.ew!==m.cw);return base.sort((a,b)=>k==="bench"?(b.aboveBench||0)-(a.aboveBench||0):k==="rich"?b.cw-a.cw:k==="lowest"?a.pct-b.pct:k==="ann"?(b.ann||0)-(a.ann||0):b.gain-a.gain).slice(0,5);};
   const stats=useMemo(()=>{const n=ME.length;const real=ME.filter(m=>m.ew!==m.cw&&m.ew>0);const comparable=ME.filter(m=>m.ew>0&&m.ew!==m.cw&&m.cw>0&&m.aboveBench!=null&&m.yrs>2);const med=arr=>{const s=[...arr].sort((a,b)=>a-b);return s.length?s[Math.floor(s.length/2)]:0;};const median=med(real.map(m=>m.pct));const ds=real.filter(m=>m.p==="D"),rs=real.filter(m=>m.p==="R");const abv=comparable.filter(m=>m.aboveBench>0).length;return{n,nReal:real.length,median,medD:med(ds.map(m=>m.pct)),medR:med(rs.map(m=>m.pct)),aboveBenchPct:comparable.length?Math.round(abv/comparable.length*100):0};},[]);
 
+  const allTrades=useMemo(()=>{const all=[];for(const[key,entries]of Object.entries(TX_DETAIL)){const[name,state]=key.split("|");const member=ME.find(x=>x.nm===name&&x.s===state);if(!member)continue;for(const e of entries){const[date,act,tk,sec,amt]=e.split("|");all.push({date,act,tk,sec,amt:parseInt(amt)||0,member});}}return all.sort((a,b)=>b.date.localeCompare(a.date));},[]);
+  const recentTrades=useMemo(()=>allTrades.slice(0,12),[allTrades]);
+  const [tradeQ,setTradeQ]=useState("");
+  const [tradeAct,setTradeAct]=useState("all");
+  const [tradeSec,setTradeSec]=useState("all");
+  const [tradeLimit,setTradeLimit]=useState(100);
+  const tradeSectors=useMemo(()=>{const s=new Set();allTrades.forEach(t=>{if(t.sec)s.add(t.sec);});return[...s].sort();},[allTrades]);
+  const filteredTrades=useMemo(()=>{
+    let l=allTrades;
+    if(tradeAct!=="all")l=l.filter(t=>t.act===tradeAct);
+    if(tradeSec!=="all")l=l.filter(t=>t.sec===tradeSec);
+    if(tradeQ){const q=tradeQ.toLowerCase();l=l.filter(t=>t.member.nm.toLowerCase().includes(q)||t.member.s.toLowerCase().includes(q)||(t.tk||"").toLowerCase().includes(q));}
+    return l;
+  },[allTrades,tradeAct,tradeSec,tradeQ]);
+  const rangeLabel=n=>{const lo=n-1;if(lo>=1e6)return`$${(lo/1e6).toFixed(0)}M+`;if(lo>=1e3)return`$${(lo/1e3).toFixed(0)}K+`;return`$${lo}`;};
+  const shareMember=useCallback(m=>{const yr=m.y;const noGain=m.ew===m.cw;const partyState=`${m.p}-${m.s}`;const role=m.ch==="S"?"Sen.":"Rep.";let txt;if(noGain)txt=`${role} ${m.nm} (${partyState}) — Net worth: ${fmt(m.cw)}. Entered Congress ${yr}.`;else if(m.noPct)txt=`${role} ${m.nm} (${partyState}) — Net worth went from ${fmt(m.ew)} in ${yr} to ${fmt(m.cw)} now. Gain: ${fmt(m.gain)} over ${m.yrs}yr.`;else txt=`${role} ${m.nm} (${partyState}) — Net worth: ${fmt(m.ew)} (${yr}) → ${fmt(m.cw)} (now). ${m.pct>=0?"+":""}${m.pct.toFixed(0)}% over ${m.yrs}yr. S&P 500 same period: ${m.bench.toFixed(0)}%/yr.`;const url=`https://wealthincongress.com/#/member/${slug(m)}`;if(navigator.share){navigator.share({title:`${role} ${m.nm} — Wealth in Congress`,text:txt,url}).catch(()=>{});}else{const tweetUrl=`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(url)}`;window.open(tweetUrl,"_blank","noopener,noreferrer");}},[slug]);
+
   const tab=a=>({padding:"5px 12px",fontSize:16,fontWeight:700,letterSpacing:".04em",textTransform:"uppercase",cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:a?`1px solid ${t.bgBtnA}`:`1px solid ${t.borderLt}`,fontFamily:"'IBM Plex Mono',ui-monospace,monospace"});
   const fb=a=>({padding:"3px 8px",fontSize:15,cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:`1px solid ${a?t.bgBtnA:t.borderLt}`,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",fontWeight:700});
 
@@ -920,7 +946,7 @@ export default function App(){
   return(<TC.Provider value={{...t,mob,tab2}}>
     <div style={{minHeight:"100vh",background:t.bg,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",color:t.text,display:"flex",flexDirection:"column"}}>
       <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet"/>
-      {detail&&<MemberDetail m={detail} onClose={()=>setDetail(null)} onCompare={toggleCmp} comparing={cmpSet.has(detail.nm)}/>}
+      {detail&&<MemberDetail m={detail} onClose={()=>setDetail(null)} onCompare={toggleCmp} onShare={shareMember} comparing={cmpSet.has(detail.nm)}/>}
       {showMethod&&(()=>{const S=[["Data Sources","Net worth figures parsed from Senate EFDS and House financial disclosure filings by an automated agent. Entry figures from earliest available filing; current from most recent (typically 2024). Asset holdings, STOCK Act transactions, and campaign finance data from EFDS, House Clerk, and FEC respectively."],["Net Worth","Disclosure forms report assets and liabilities in value ranges (e.g. $100,001-$250,000). We use midpoints. 'Over $50,000,000' uses $50M as a floor — the wealthiest members are underestimated."],["Gain Calculation","Members showing '--' have only one filing available, so no gain can be computed. Members with zero or negative entry net worth show dollar gains and salary-year equivalents, but percentage and annualized returns display as N/A since percentage change from zero or negative is undefined."],["Annualized Return","CAGR: (current/entry)^(1/years)-1. Normalizes for time in office so a 40-year veteran can be compared to a 4-year freshman."],["S&P Benchmark","What passive S&P 500 total return investing would have produced over the same period, using the member's entry year. Members above the benchmark outperformed the market."],["Market Comparison","About half of members with comparable data (2+ years in office) beat the S&P 500 on an annualized basis. The median veteran member roughly tracks the benchmark. Freshmen (1 year of data) almost universally 'beat' the benchmark due to the short comparison window — this is a data artifact, not evidence of trading skill. Most congressional wealth accumulation comes from sources other than stock picks — real estate, business interests, and spousal income. Both parties show comparable patterns."],["Asset Holdings","Sector-classified asset data available for 45 of the wealthiest members. Sectors assigned by ticker lookup (AAPL=Tech, JPM=Finance) or asset type (mutual funds=Diversified, real estate=RealEstate). Values based on disclosure range midpoints."],["STOCK Act Trades","Periodic Transaction Reports (PTRs) scraped from EFDS and House Clerk for 39 actively trading members, covering 2023-2025. Filing delay analysis available for senators only — the Senate EFDS system exposes filing dates; the House Clerk PDF system does not."],["Campaign Finance","FEC data for 511 members including total raised, PAC contributions, and top donor industries by sector. Used to identify triple overlap: committee jurisdiction + personal holdings + campaign donors in the same industry."],["Committee Overlap","Committee-sector risk mappings define which industries each committee regulates (e.g. Banking → Finance, RealEstate). 'Triple overlap' flags members where personal holdings, active trades, AND campaign donors all align with their committee's regulated industries."],["Salary-Years","Total gain ÷ $174,000 annual salary. Illustrative context only."],["Districts","119th Congress boundaries from U.S. Census Bureau TIGER/Line cartographic files. District party from Clerk of the House."],["Coverage","540 members of the 119th Congress (100 Senate + 440 House; NJ-11 vacant). 509 with gain data (entry ≠ current NW). 402 with calculable percentage returns (entry NW > $0). 45 with sector-tagged asset holdings. 39 with STOCK Act transaction data. 511 with FEC campaign finance data. 223 with outside income data. 256 with outside positions. Spousal assets are included per standard methodology."]];
         return(<div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",background:t.bgModalOv,backdropFilter:"blur(4px)"}} onClick={()=>setShowMethod(false)}><div style={{background:t.bgModal,border:`1px solid ${t.border}`,borderRadius:10,padding:"24px 28px",maxWidth:560,width:"92%",maxHeight:"85vh",overflowY:"auto",color:t.text}} onClick={e=>e.stopPropagation()}>
           <div style={{display:"flex",justifyContent:"space-between",marginBottom:16}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:22,fontWeight:900,color:t.heading}}>Methodology</div><div onClick={()=>setShowMethod(false)} style={{cursor:"pointer",width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:t.bgAlt,color:t.text2,fontSize:17,border:`1px solid ${t.border}`}}>×</div></div>
@@ -938,13 +964,21 @@ export default function App(){
           </div>
           <div style={{display:"flex",flexDirection:mob?"row":"column",alignItems:mob?"center":"flex-end",gap:4,flexWrap:"wrap"}}>
             {!mob&&<div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{[[stats.n+" members",t.text2],[stats.nReal+" with gain data",t.text3],["Median +"+stats.median.toFixed(0)+"%",t.gain],[stats.aboveBenchPct+"% beat S&P",t.bench],["D +"+stats.medD.toFixed(0)+"%",t.dem],["R +"+stats.medR.toFixed(0)+"%",t.rep]].map(([v,c],i)=>(<div key={i} style={{fontSize:15,fontWeight:700,color:c}}>{v}</div>))}</div>}
+            <div style={{display:"flex",alignItems:"center",gap:8,marginTop:mob?6:8,fontSize:15,flexWrap:"wrap"}}>
+              <label htmlFor="find-state" style={{color:t.text2,fontWeight:700}}>See your delegation:</label>
+              <select id="find-state" value={sel||""} onChange={e=>{if(e.target.value){setSel(e.target.value);setView("map");}}} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"4px 8px",color:t.text,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",fontSize:15,outline:"none",cursor:"pointer"}}>
+                <option value="">Select state…</option>
+                {Object.entries(SN).sort((a,b)=>a[1].localeCompare(b[1])).map(([k,v])=>(<option key={k} value={k}>{v}</option>))}
+              </select>
+            </div>
             <div style={{display:"flex",gap:3,flexWrap:"wrap"}}>
               {!mob&&<div onClick={()=>setShowMethod(true)} style={{...fb(false),cursor:"pointer"}}>Methods</div>}
-              {!mob&&<div onClick={exportCSV} style={{...fb(false),cursor:"pointer"}}>Export CSV</div>}
+              <div onClick={exportCSV} style={{...fb(false),cursor:"pointer"}}>Export CSV</div>
               <div onClick={()=>setMode(mode==="dark"?"light":"dark")} style={{...fb(false),cursor:"pointer"}}>{mode==="dark"?"☀":"☾"}</div>
               <div style={tab(view==="map")} onClick={()=>{setView("map");setAlphaRange(null);if(zoomed)zoomOut();}}>Map</div>
               <div style={tab(view==="list")} onClick={()=>setView("list")}>{mob?"List":"Leaderboard"}</div>
               <div style={tab(view==="committees")} onClick={()=>{setView("committees");setAlphaRange(null);}}>{mob?"Cmte":"Committees"}</div>
+              <div style={tab(view==="trades")} onClick={()=>{setView("trades");setAlphaRange(null);}}>Trades</div>
               {mob&&<div onClick={()=>setShowMethod(true)} style={{...fb(false),cursor:"pointer"}}>?</div>}
               {mob&&<a href="https://x.com/CongressWealth" target="_blank" rel="noopener" style={{...fb(false),cursor:"pointer",textDecoration:"none",color:t.textBtnI,fontWeight:700}}>𝕏</a>}
               {mob&&<a href="mailto:wealthincongress@proton.me" style={{...fb(false),cursor:"pointer",textDecoration:"none",color:t.textBtnI}}>✉</a>}
@@ -1139,6 +1173,20 @@ export default function App(){
               <Card title="Most Above S&P" list={top5("bench")} metric="bench"/><Card title="Wealthiest" list={top5("rich")} metric="rich"/>
               <Card title="Largest $ Gain" list={top5("dollar")} metric="dollar"/><Card title="Least Enriched" list={top5("lowest")} metric="lowest"/>
               </div>}
+              {recentTrades.length>0&&<div style={{marginTop:14,padding:12,background:t.statBg,borderRadius:6,border:`1px solid ${t.borderLt}`}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:8}}>
+                  <div style={{fontSize:14,color:t.text3,textTransform:"uppercase",letterSpacing:".06em",fontWeight:700}}>Recent STOCK Act Activity</div>
+                  <div role="button" tabIndex={0} onClick={()=>{setView("trades");setAlphaRange(null);}} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setView("trades");setAlphaRange(null);}}} style={{fontSize:13,color:t.bench,cursor:"pointer",fontWeight:700}}>View all {allTrades.length.toLocaleString()} →</div>
+                </div>
+                <div>{recentTrades.map((tr,i)=>(<div key={i} role="button" tabIndex={0} onClick={()=>setDetail(tr.member)} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setDetail(tr.member);}}} style={{display:"flex",alignItems:"center",gap:10,padding:"5px 6px",borderBottom:i<recentTrades.length-1?`1px solid ${t.borderLt}`:"none",cursor:"pointer",fontSize:14}} onMouseEnter={e=>{e.currentTarget.style.background=t.bgHover;}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
+                  <div style={{color:t.text3,width:70,flexShrink:0,fontFamily:"'IBM Plex Mono',ui-monospace,monospace"}}>{tr.date}</div>
+                  <div style={{width:3,height:14,borderRadius:1,background:pClr(t,tr.member.p),flexShrink:0}}/>
+                  <div style={{flex:1,minWidth:0,overflow:"hidden",whiteSpace:"nowrap",textOverflow:"ellipsis"}}><span style={{fontWeight:700,color:t.text}}>{tr.member.nm}</span> <span style={{color:t.text3}}>({tr.member.p}-{tr.member.s})</span></div>
+                  <div style={{width:44,flexShrink:0,color:tr.act==="B"?t.gain:t.loss,fontWeight:700}}>{tr.act==="B"?"Bought":"Sold"}</div>
+                  <div style={{width:70,flexShrink:0,fontWeight:700,color:t.text,fontFamily:"'IBM Plex Mono',ui-monospace,monospace"}}>{tr.tk||tr.sec||"—"}</div>
+                  <div style={{width:70,flexShrink:0,textAlign:"right",color:t.text2,fontFamily:"'IBM Plex Mono',ui-monospace,monospace"}}>{rangeLabel(tr.amt)}</div>
+                </div>))}</div>
+              </div>}
             </div>}
           </div>
           {sel&&<Panel st={sel} members={byState[sel]||[]} onClose={zoomOut} onMem={setDetail}/>}
@@ -1204,6 +1252,46 @@ export default function App(){
                 {results.length===0&&<div style={{padding:20,textAlign:"center",color:t.text3}}>No sector overlap data available.</div>}
               </div>);
             })()}
+          </div>
+        ):view==="trades"?(
+          <div style={{flex:1,padding:mob?"8px 10px":"10px 18px",overflow:"auto"}}>
+            <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:mob?16:20,fontWeight:900,color:t.heading,marginBottom:4}}>STOCK Act Trade Activity</div>
+            <div style={{fontSize:15,color:t.text2,marginBottom:12,lineHeight:1.6,maxWidth:640}}>Every periodic transaction report disclosed under the STOCK Act by members who actively trade. Amount shown is the lower bound of the disclosed range — actual trades fall between that value and the next threshold. Click any row to see the member's full profile.</div>
+            <div style={{display:"flex",gap:mob?4:6,flexWrap:"wrap",alignItems:"center",marginBottom:10}}>
+              <input type="text" placeholder={mob?"Member or ticker":"Search member, ticker, or state..."} value={tradeQ} onChange={e=>setTradeQ(e.target.value)} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"5px 10px",color:t.text,fontSize:14,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",outline:"none",width:mob?140:220}}/>
+              <div style={{display:"flex",gap:2}}>{[["all","All"],["B","Bought"],["S","Sold"]].map(([v,l])=>(<div key={v} style={fb(tradeAct===v)} onClick={()=>setTradeAct(v)}>{l}</div>))}</div>
+              <select value={tradeSec} onChange={e=>setTradeSec(e.target.value)} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"4px 8px",color:t.text,fontSize:14,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",outline:"none",cursor:"pointer"}}>
+                <option value="all">All sectors</option>
+                {tradeSectors.map(s=>(<option key={s} value={s}>{s}</option>))}
+              </select>
+              <div style={{fontSize:13,color:t.text3,marginLeft:"auto"}}>{filteredTrades.length.toLocaleString()} transactions</div>
+            </div>
+            {filteredTrades.length===0?(
+              <div style={{padding:40,textAlign:"center",color:t.text3,fontSize:15}}>No trades match these filters.</div>
+            ):(<>
+              <div style={{border:`1px solid ${t.borderLt}`,borderRadius:6,overflow:"hidden"}}>
+                <div style={{display:"flex",alignItems:"center",gap:10,padding:"6px 10px",background:t.bgAlt,borderBottom:`1px solid ${t.borderLt}`,fontSize:12,color:t.text3,textTransform:"uppercase",letterSpacing:".06em",fontWeight:700}}>
+                  <div style={{width:85,flexShrink:0}}>Date</div>
+                  <div style={{width:3,flexShrink:0}}/>
+                  <div style={{flex:1,minWidth:0}}>Member</div>
+                  <div style={{width:mob?50:64,flexShrink:0}}>Action</div>
+                  {!mob&&<div style={{width:68,flexShrink:0}}>Ticker</div>}
+                  {!mob&&<div style={{width:90,flexShrink:0}}>Sector</div>}
+                  <div style={{width:mob?64:88,flexShrink:0,textAlign:"right"}}>Amount</div>
+                </div>
+                {filteredTrades.slice(0,tradeLimit).map((tr,i)=>(<div key={i} role="button" tabIndex={0} onClick={()=>setDetail(tr.member)} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setDetail(tr.member);}}} style={{display:"flex",alignItems:"center",gap:10,padding:"6px 10px",borderBottom:`1px solid ${t.borderLt}`,cursor:"pointer",fontSize:14,fontFamily:"'IBM Plex Mono',ui-monospace,monospace"}} onMouseEnter={e=>{e.currentTarget.style.background=t.bgHover;}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
+                  <div style={{color:t.text3,width:85,flexShrink:0}}>{tr.date}</div>
+                  <div style={{width:3,height:16,borderRadius:1,background:pClr(t,tr.member.p),flexShrink:0}}/>
+                  <div style={{flex:1,minWidth:0,overflow:"hidden",whiteSpace:"nowrap",textOverflow:"ellipsis"}}><span style={{fontWeight:700,color:t.text}}>{tr.member.nm}</span> <span style={{color:t.text3}}>({tr.member.p}-{tr.member.s})</span></div>
+                  <div style={{width:mob?50:64,flexShrink:0,color:tr.act==="B"?t.gain:t.loss,fontWeight:700}}>{tr.act==="B"?"Bought":"Sold"}</div>
+                  {!mob&&<div style={{width:68,flexShrink:0,fontWeight:700,color:t.text}}>{tr.tk||"—"}</div>}
+                  {!mob&&<div style={{width:90,flexShrink:0,color:t.text2,overflow:"hidden",whiteSpace:"nowrap",textOverflow:"ellipsis"}}>{tr.sec||"—"}</div>}
+                  <div style={{width:mob?64:88,flexShrink:0,textAlign:"right",color:t.text2}}>{rangeLabel(tr.amt)}</div>
+                </div>))}
+              </div>
+              {filteredTrades.length>tradeLimit&&<div style={{marginTop:12,textAlign:"center"}}><div role="button" tabIndex={0} onClick={()=>setTradeLimit(l=>l+200)} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setTradeLimit(l=>l+200);}}} style={{display:"inline-block",cursor:"pointer",padding:"8px 18px",borderRadius:4,background:t.bgAlt,color:t.text2,fontSize:14,fontWeight:700,border:`1px solid ${t.border}`}}>Load 200 more</div></div>}
+              <div style={{marginTop:16,padding:"10px 14px",background:t.statBg,borderRadius:6,fontSize:13,color:t.text3,lineHeight:1.6}}>STOCK Act requires members to file periodic transaction reports within 45 days of the trade. Transaction date shown is when the trade occurred, not when it was disclosed. Some entries are block disclosures where specific securities are not itemized — these show only sector and amount range.</div>
+            </>)}
           </div>
         ):(
           <div style={{flex:1,padding:mob?"8px 10px":"10px 18px",overflow:"auto"}}>
