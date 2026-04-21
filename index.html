@@ -80,6 +80,19 @@
       .noscript-content h1 { font-size: 28px; margin-bottom: 16px; }
       .noscript-content h2 { font-size: 20px; margin: 24px 0 8px; }
       .noscript-content p { margin-bottom: 12px; }
+
+      @media print {
+        body { background: white !important; color: black !important; font-family: Georgia, serif !important; }
+        #root { min-height: auto !important; }
+        svg text { fill: black !important; }
+        a { color: black !important; text-decoration: underline !important; }
+        [role="button"] { display: none !important; }
+        button, .no-print { display: none !important; }
+        input, select { display: none !important; }
+        .wic-footer { border-top: 1px solid black !important; color: black !important; background: white !important; margin-top: 20px; }
+        * { box-shadow: none !important; background-image: none !important; }
+        @page { margin: 0.6in; }
+      }
     </style>
   </head>
   <body>

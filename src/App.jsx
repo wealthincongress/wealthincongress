@@ -607,8 +607,8 @@ function MemberDetail({m,onClose,onCompare,comparing}){const t=useT();
   const items=[["State",SN[m.s]||m.s],["Chamber",m.ch==="S"?"U.S. Senate":m.d?"U.S. House, Dist. "+m.d:"U.S. House"],["Party",m.p==="D"?"Democrat":m.p==="R"?"Republican":"Independent"],["Entered",m.y],["Years",m.yrs],["Entry Net Worth",fmt(m.ew)],["Current Net Worth",fmt(m.cw)],["Total Gain",noGain?"--":fmt(m.gain)],["Total %",noGain?"--":m.noPct?"N/A":(m.pct>=0?"+":"")+m.pct.toFixed(1)+"%"],["Annualized",noGain?"--":m.noPct?"N/A":m.ann!=null?m.ann.toFixed(1)+"%/yr":"N/A"],["S&P Benchmark",m.bench.toFixed(1)+"%/yr"],["vs. Benchmark",noGain?"--":m.noPct?"N/A":m.aboveBench!=null?(m.aboveBench>=0?"+":"")+m.aboveBench.toFixed(1)+" pp":"N/A"],["If S&P Only",benchW?fmt(benchW):"--"],["Salary-Years",noGain?"--":m.gain>0?m.salYrs.toFixed(1)+" years":"--"],["Wealth Source",m.nt||"--"]];
   return(<div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:t.mob?"flex-end":"center",justifyContent:"center",background:t.bgModalOv,backdropFilter:"blur(4px)"}} onClick={onClose}><div style={{background:t.bgModal,border:t.mob?"none":`1px solid ${t.border}`,borderRadius:t.mob?"12px 12px 0 0":10,padding:t.mob?"18px 16px 24px":"24px 28px",maxWidth:t.mob?"100%":460,width:t.mob?"100%":"92%",maxHeight:t.mob?"92vh":"85vh",overflowY:"auto",fontFamily:"'IBM Plex Mono',ui-monospace,monospace",color:t.text}} onClick={e=>e.stopPropagation()}>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:t.mob?10:14}}>
-      <div style={{display:"flex",alignItems:"center",gap:8}}>{m.bg&&<img src={`https://bioguide.congress.gov/bioguide/photo/${m.bg[0]}/${m.bg}.jpg`} style={{width:t.mob?40:48,height:t.mob?40:48,borderRadius:"50%",objectFit:"cover",border:`2px solid ${pClr(t,m.p)}`,flexShrink:0}} onError={e=>{e.target.style.display="none";}}/>}<div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:t.mob?18:22,fontWeight:900,color:t.heading}}>{m.nm}</div>{m.cm&&<div style={{fontSize:15,color:t.text3,marginTop:2,lineHeight:1.5}}>{m.cm.split(";").join(" · ")}</div>}</div></div>
-      <div style={{display:"flex",gap:6}}>{onCompare&&<div onClick={e=>{e.stopPropagation();onCompare(m);}} style={{cursor:"pointer",padding:"4px 10px",borderRadius:4,background:comparing?t.loss:t.bgAlt,color:comparing?t.textOnBtn:t.text2,fontSize:15,fontWeight:700,border:`1px solid ${t.border}`}}>{comparing?"Remove":"Compare"}</div>}<div onClick={onClose} style={{cursor:"pointer",width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:t.bgAlt,color:t.text2,fontSize:17,border:`1px solid ${t.border}`}}>×</div></div>
+      <div style={{display:"flex",alignItems:"center",gap:8}}>{m.bg&&<img src={`https://bioguide.congress.gov/bioguide/photo/${m.bg[0]}/${m.bg}.jpg`} alt="" style={{width:t.mob?40:48,height:t.mob?40:48,borderRadius:"50%",objectFit:"cover",border:`2px solid ${pClr(t,m.p)}`,flexShrink:0}} onError={e=>{e.target.style.display="none";}}/>}<div><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:t.mob?18:22,fontWeight:900,color:t.heading}}>{m.nm} <span style={{fontFamily:"'IBM Plex Mono',ui-monospace,monospace",fontSize:t.mob?13:15,fontWeight:700,color:pClr(t,m.p),padding:"1px 6px",border:`1.5px solid ${pClr(t,m.p)}`,borderRadius:3,verticalAlign:"middle",marginLeft:6}}>{m.p}</span></div>{m.cm&&<div style={{fontSize:15,color:t.text3,marginTop:2,lineHeight:1.5}}>{m.cm.split(";").join(" · ")}</div>}</div></div>
+      <div style={{display:"flex",gap:6}}>{onCompare&&<div role="button" tabIndex={0} aria-label={comparing?"Remove from compare":"Add to compare"} onClick={e=>{e.stopPropagation();onCompare(m);}} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();onCompare(m);}}} style={{cursor:"pointer",padding:"4px 10px",borderRadius:4,background:comparing?t.loss:t.bgAlt,color:comparing?t.textOnBtn:t.text2,fontSize:15,fontWeight:700,border:`1px solid ${t.border}`}}>{comparing?"Remove":"Compare"}</div>}<div role="button" tabIndex={0} aria-label="Close" onClick={onClose} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onClose();}}} style={{cursor:"pointer",width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:t.bgAlt,color:t.text2,fontSize:17,border:`1px solid ${t.border}`}}>×</div></div>
     </div>
     <div style={{display:"flex",gap:2,marginBottom:14}}>{[["Entry ("+m.y+")",fmt(m.ew),t.text2],["Current",fmt(m.cw),t.text],["Change",noGain?"--":m.noPct?"N/A":(m.pct>=0?"+":"")+m.pct.toFixed(0)+"%",noGain||m.noPct?t.text3:m.pct>=0?t.gain:t.loss]].map(([l,v,c],i)=>(<div key={i} style={{flex:1,padding:"10px 12px",background:t.statBg,borderRadius:6}}><div style={{fontSize:15,color:t.text3,textTransform:"uppercase",letterSpacing:".06em"}}>{l}</div><div style={{fontSize:18,fontWeight:700,color:c,marginTop:4}}>{v}</div></div>))}</div>
     {noGain&&<div style={{padding:"10px 14px",background:t.statBg,borderRadius:6,marginBottom:12,fontSize:15,color:t.text3,lineHeight:1.6}}>Only one financial disclosure on file — gain data requires an entry filing and a later filing to compare. {m.yrs<=2?"This member entered office recently.":"Entry and current filings report the same net worth."}</div>}
@@ -728,13 +728,13 @@ function MemberDetail({m,onClose,onCompare,comparing}){const t=useT();
 
 /* ═══════ ROW ═══════ */
 function Row({m,compact,onClick,onName}){const t=useT();const mb=t.mob;const tb=t.tab2;
-  return(<div onClick={onClick} style={{display:"flex",alignItems:"center",gap:compact?3:6,padding:compact?"6px 10px":mb?"7px 10px":"6px 12px",borderBottom:`1px solid ${t.borderLt}`,fontSize:16,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",cursor:onClick?"pointer":"default",transition:"background .1s"}} onMouseEnter={e=>{e.currentTarget.style.background=t.bgHover;}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
+  return(<div onClick={onClick} role={onClick?"button":undefined} tabIndex={onClick?0:undefined} onKeyDown={onClick?e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onClick();}}:undefined} style={{display:"flex",alignItems:"center",gap:compact?3:6,padding:compact?"6px 10px":mb?"7px 10px":"6px 12px",borderBottom:`1px solid ${t.borderLt}`,fontSize:16,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",cursor:onClick?"pointer":"default",transition:"background .1s"}} onMouseEnter={e=>{e.currentTarget.style.background=t.bgHover;}} onMouseLeave={e=>{e.currentTarget.style.background="transparent";}}>
     {compact||mb?<div style={{width:3,height:20,borderRadius:1,background:pClr(t,m.p),flexShrink:0}}/>:m.bg?<img src={`https://bioguide.congress.gov/bioguide/photo/${m.bg[0]}/${m.bg}.jpg`} style={{width:20,height:20,borderRadius:"50%",objectFit:"cover",border:`1.5px solid ${pClr(t,m.p)}`,flexShrink:0}} onError={e=>{e.target.style.display="none";}}/>:<div style={{width:20,height:20,borderRadius:"50%",background:pClr(t,m.p),opacity:.2,flexShrink:0}}/>}
-    <div style={{flex:1,minWidth:0,overflow:"hidden"}}><div style={{fontWeight:700,color:t.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",fontSize:compact||mb?10:10.5,cursor:onName?"pointer":"default"}} onClick={e=>{e.stopPropagation();onName?.(m);}}>{m.nm}</div><div style={{fontSize:compact||mb?8:8.5,color:t.text3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.p} · {m.ch==="S"?"Sen.":m.d?"Dist. "+m.d:"Rep."} · {SN[m.s]||m.s}</div></div>
-    {!mb&&<div style={{width:68,textAlign:"right",flexShrink:0,color:t.text2,fontSize:compact?9.5:10}}>{fmt(m.ew)}</div>}
-    <div style={{width:mb?60:68,textAlign:"right",flexShrink:0,color:t.text,fontWeight:700,fontSize:compact||mb?9.5:10}}>{fmt(m.cw)}</div>
-    {!compact&&!mb&&<div style={{width:52,textAlign:"right",flexShrink:0,fontSize:15,color:m.ew===m.cw?t.textM:m.aboveBench!=null&&m.aboveBench>0?t.gain:t.text2}}>{m.ew===m.cw?"--":(m.ann!=null?m.ann.toFixed(1)+"%":"--")}</div>}
-    <div style={{width:mb?44:52,textAlign:"right",flexShrink:0,fontWeight:700,fontSize:compact||mb?9.5:10,color:m.ew===m.cw?t.textM:m.noPct?t.text3:m.pct>0?t.gain:m.pct<0?t.loss:t.text3}}>{m.ew===m.cw?"--":m.noPct?"N/A":((m.pct>0?"+":"")+m.pct.toFixed(0)+"%")}</div>
+    <div style={{flex:1,minWidth:0,overflow:"hidden"}}><div style={{fontWeight:700,color:t.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",fontSize:compact||mb?13:13,cursor:onName?"pointer":"default"}} onClick={e=>{e.stopPropagation();onName?.(m);}}>{m.nm}</div><div style={{fontSize:compact||mb?12:12,color:t.text3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.p} · {m.ch==="S"?"Sen.":m.d?"Dist. "+m.d:"Rep."} · {SN[m.s]||m.s}</div></div>
+    {!mb&&<div style={{width:84,textAlign:"right",flexShrink:0,color:t.text2,fontSize:compact?13:13}}>{fmt(m.ew)}</div>}
+    <div style={{width:mb?72:84,textAlign:"right",flexShrink:0,color:t.text,fontWeight:700,fontSize:compact||mb?13:13}}>{fmt(m.cw)}</div>
+    {!compact&&!mb&&<div style={{width:64,textAlign:"right",flexShrink:0,fontSize:15,color:m.ew===m.cw?t.textM:m.aboveBench!=null&&m.aboveBench>0?t.gain:t.text2}}>{m.ew===m.cw?"--":(m.ann!=null?m.ann.toFixed(1)+"%":"--")}</div>}
+    <div style={{width:mb?56:64,textAlign:"right",flexShrink:0,fontWeight:700,fontSize:compact||mb?13:13,color:m.ew===m.cw?t.textM:m.noPct?t.text3:m.pct>0?t.gain:m.pct<0?t.loss:t.text3}}>{m.ew===m.cw?"--":m.noPct?"N/A":((m.pct>0?"+":"")+m.pct.toFixed(0)+"%")}</div>
   </div>);
 }
 
@@ -810,6 +810,42 @@ export default function App(){
   const pathGen=useRef(d3.geoPath());
 
   const [mapSearch,setMapSearch]=useState("");
+
+  /* ═══════ URL ROUTING (hash-based, no deps) ═══════ */
+  const slug=useCallback(m=>{
+    const n=m.nm.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    return`${n}-${m.s}`.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  },[]);
+  useEffect(()=>{
+    const sync=()=>{
+      const h=window.location.hash.slice(1);
+      if(h.startsWith("/member/")){
+        const s=h.slice(8);const found=ME.find(x=>slug(x)===s);
+        if(found){setDetail(found);return;}
+      }
+      if(h.startsWith("/state/")){
+        const st=h.slice(7).toUpperCase();
+        if(SN[st]){setSel(st);setDetail(null);return;}
+      }
+      setDetail(null);setSel(null);
+    };
+    sync();
+    window.addEventListener("popstate",sync);
+    return()=>window.removeEventListener("popstate",sync);
+  },[slug]);
+  useEffect(()=>{
+    let target="";
+    if(detail)target=`#/member/${slug(detail)}`;
+    else if(sel)target=`#/state/${sel.toLowerCase()}`;
+    if(window.location.hash!==target){
+      const newUrl=target?window.location.pathname+target:window.location.pathname;
+      window.history.pushState(null,"",newUrl);
+    }
+  },[detail,sel,slug]);
+
+  /* ═══════ ACCESSIBILITY: keyboard support for clickable divs ═══════ */
+  const btn=useCallback(fn=>({role:"button",tabIndex:0,onClick:fn,
+    onKeyDown:e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();fn();}}}),[]);
   const mapResults=useMemo(()=>{if(!mapSearch||mapSearch.length<2)return[];const q=mapSearch.toLowerCase();return ME.filter(m=>m.nm.toLowerCase().includes(q)||(SN[m.s]||"").toLowerCase().includes(q)).slice(0,8);},[mapSearch]);
 
   const exportCSV=()=>{const hdr="Name,State,Chamber,Party,Entered,EntryNW,CurrentNW,Gain,Pct,Annualized,Source\n";const rows=ME.map(m=>`"${m.nm}",${m.s},${m.ch},${m.p},${m.y},${m.ew},${m.cw},${m.gain},${m.noPct?"":m.pct.toFixed(1)},${m.ann?.toFixed(1)||""},${m.src}`).join("\n");const blob=new Blob([hdr+rows],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="congressional-wealth-tracker.csv";a.click();};
@@ -873,10 +909,10 @@ export default function App(){
   const Card=({title,list,metric})=>(<div style={{flex:1,minWidth:mob?160:210}}>
     <div style={{fontSize:14,color:t.text3,textTransform:"uppercase",letterSpacing:".06em",marginBottom:4,fontWeight:700}}>{title}</div>
     {list.map((m,i)=>{const v=metric==="ann"?(m.ann?.toFixed(1)+"%/yr"):metric==="bench"?((m.aboveBench>=0?"+":"")+m.aboveBench?.toFixed(1)+" pp"):metric==="rich"?fmt(m.cw):metric==="lowest"?("+"+m.pct.toFixed(0)+"% / "+m.yrs+"yr"):("+"+fmt(m.gain));
-      return(<div key={i} style={{display:"flex",alignItems:"center",gap:5,padding:"4px 8px",background:t.bgAlt,borderRadius:4,marginBottom:3,border:`1px solid ${t.borderLt}`,cursor:"pointer"}} onClick={()=>setDetail(m)}>
+      return(<div key={i} {...btn(()=>setDetail(m))} style={{display:"flex",alignItems:"center",gap:5,padding:"4px 8px",background:t.bgAlt,borderRadius:4,marginBottom:3,border:`1px solid ${t.borderLt}`,cursor:"pointer"}}>
         <div style={{fontSize:14,fontWeight:700,color:t.textM,width:12,textAlign:"right",flexShrink:0}}>{i+1}</div>
-        <div style={{width:3,height:16,borderRadius:1,background:pClr(t,m.p),flexShrink:0}}/>
-        <div style={{flex:1,minWidth:0,overflow:"hidden"}}><div style={{fontSize:15,fontWeight:700,color:t.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.nm}</div><div style={{fontSize:13,color:t.text3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{SN[m.s]} · {m.yrs}yr</div></div>
+        <div aria-label={m.p==="D"?"Democrat":m.p==="R"?"Republican":"Independent"} style={{width:3,height:16,borderRadius:1,background:pClr(t,m.p),flexShrink:0}}/>
+        <div style={{flex:1,minWidth:0,overflow:"hidden"}}><div style={{fontSize:15,fontWeight:700,color:t.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.nm}</div><div style={{fontSize:13,color:t.text3,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{m.p} · {SN[m.s]} · {m.yrs}yr</div></div>
         <div style={{fontSize:14,fontWeight:700,color:metric==="lowest"?t.text2:metric==="bench"?(m.aboveBench>=0?t.gain:t.loss):metric==="ann"?t.gain:t.text2,whiteSpace:"nowrap",flexShrink:0}}>{v}</div>
       </div>);})}
   </div>);
@@ -1036,7 +1072,7 @@ export default function App(){
                       </div>);})}
                   </div>
                   <div style={{display:"flex",gap:3,marginBottom:10}}>
-                    {buckets.map((b,i)=>(<div key={i} style={{flex:1,textAlign:"center",fontSize:mob?6.5:8,color:t.text3}}>{b.label}</div>))}
+                    {buckets.map((b,i)=>(<div key={i} style={{flex:1,textAlign:"center",fontSize:mob?6.5:12,color:t.text3}}>{b.label}</div>))}
                   </div>
                   <div style={{display:mob?"none":"flex",gap:16,marginBottom:8}}>
                     <div style={{flex:1,padding:"8px 12px",background:t.bgHover,borderRadius:5,cursor:"pointer",transition:"opacity .15s"}} onClick={()=>{setPf("D");setSort("aboveBench");setView("list");}} onMouseEnter={e=>{e.currentTarget.style.opacity=".8";}} onMouseLeave={e=>{e.currentTarget.style.opacity="1";}}>
@@ -1048,7 +1084,7 @@ export default function App(){
                       <div style={{fontSize:16,fontWeight:900,color:t.text,marginTop:2}}>{rReal.length?Math.round(rBeat/rReal.length*100):0}%<span style={{fontSize:15,color:t.text3,fontWeight:400,marginLeft:4}}>beat S&P ({rBeat}/{rReal.length})</span></div>
                     </div>
                   </div>
-                  <div style={{fontSize:mob?9:10,color:t.text2,lineHeight:1.7}}>
+                  <div style={{fontSize:mob?9:13,color:t.text2,lineHeight:1.7}}>
                     <strong style={{color:t.text}}>{medAlpha>=0?`The median member beats the S\u0026P 500 by ${medAlpha.toFixed(1)} percentage points per year`:`The median member trails the S\u0026P 500 by ${Math.abs(medAlpha).toFixed(1)} percentage points per year`}.</strong> {100-beatPct}% of Congress would have been better off in an index fund. {beatPct>50?"But much of this outperformance comes from real estate, business income, and freshmen with short track records — not stock-picking skill.":"The question isn't whether Congress gets rich from trading — most don't."} The question is <span style={{color:t.text,fontWeight:700,cursor:"pointer",borderBottom:`1px dashed ${t.text3}`}} onClick={()=>setView("committees")}>who are the {beatPct}%, and what committees do they sit on?</span>
                   </div>
                 </div>);
@@ -1172,7 +1208,7 @@ export default function App(){
         ):(
           <div style={{flex:1,padding:mob?"8px 10px":"10px 18px",overflow:"auto"}}>
             <div style={{display:"flex",gap:mob?4:6,flexWrap:"wrap",alignItems:"center",marginBottom:10}}>
-              <input type="text" placeholder={mob?"Search...":"Search name, state..."} value={search} onChange={e=>setSearch(e.target.value)} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"5px 10px",color:t.text,fontSize:mob?10:10.5,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",outline:"none",width:mob?120:180}}/>
+              <input type="text" placeholder={mob?"Search...":"Search name, state..."} value={search} onChange={e=>setSearch(e.target.value)} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"5px 10px",color:t.text,fontSize:mob?13:13,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",outline:"none",width:mob?120:180}}/>
               <div style={{display:"flex",gap:2}}>{[["all","All"],["D","D"],["R","R"]].map(([v,l])=>(<div key={v} style={fb(pf===v)} onClick={()=>setPf(v)}>{l}</div>))}{!mob&&<div style={fb(pf==="I")} onClick={()=>setPf("I")}>Ind</div>}</div>
               {!mob&&<div style={{display:"flex",gap:2}}>{[["all","Both"],["Senate","Senate"],["House","House"]].map(([v,l])=>(<div key={v} style={fb(cf===v)} onClick={()=>setCf(v)}>{l}</div>))}</div>}
               {!mob&&<select value={cmf} onChange={e=>setCmf(e.target.value)} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"3px 6px",color:t.text,fontSize:15,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",outline:"none"}}>
@@ -1202,6 +1238,9 @@ export default function App(){
           </div>
         )}
       </div>
+      <footer className="wic-footer" style={{padding:"10px 16px",borderTop:`1px solid ${t.border}`,background:t.bgAlt,fontSize:13,color:t.text3,textAlign:"center",lineHeight:1.5}}>
+        Compiled April 2026 from the most recent available Senate EFDS and House Clerk financial disclosures, STOCK Act periodic transaction reports, and FEC filings. Methodology uses midpoint estimates of disclosed ranges. <a href="https://wealthincongress.com" style={{color:t.bench,textDecoration:"none"}}>wealthincongress.com</a>
+      </footer>
       <CompareBar members={cmpList} onRemove={m=>setCmpList(p=>p.filter(x=>x.nm!==m.nm))} onOpen={setDetail}/>
     </div>
   </TC.Provider>);
