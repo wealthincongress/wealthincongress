@@ -820,20 +820,33 @@ export default function App(){
 
   const [mapSearch,setMapSearch]=useState("");
 
-  /* ═══════ URL ROUTING (hash-based, no deps) ═══════ */
+  /* ═══════ URL ROUTING (real paths via History API) ═══════ */
   const slug=useCallback(m=>{
     const n=m.nm.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
     return`${n}-${m.s}`.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
   },[]);
+  const [showPress,setShowPress]=useState(false);
   useEffect(()=>{
     const sync=()=>{
-      const h=window.location.hash.slice(1);
-      if(h.startsWith("/member/")){
-        const s=h.slice(8);const found=ME.find(x=>slug(x)===s);
+      const path=window.location.pathname;
+      // Migrate any old hash URLs
+      if(window.location.hash){
+        const h=window.location.hash.slice(1);
+        if(h.startsWith("/member/")||h.startsWith("/state/")){
+          window.history.replaceState(null,"",h);
+          return sync();
+        }
+      }
+      if(path==="/press"){setShowPress(true);setDetail(null);setSel(null);return;}
+      setShowPress(false);
+      const memberMatch=path.match(/^\/member\/([^/]+)\/?$/);
+      if(memberMatch){
+        const found=ME.find(x=>slug(x)===memberMatch[1]);
         if(found){setDetail(found);return;}
       }
-      if(h.startsWith("/state/")){
-        const st=h.slice(7).toUpperCase();
+      const stateMatch=path.match(/^\/state\/([^/]+)\/?$/);
+      if(stateMatch){
+        const st=stateMatch[1].toUpperCase();
         if(SN[st]){setSel(st);setDetail(null);return;}
       }
       setDetail(null);setSel(null);
@@ -843,14 +856,15 @@ export default function App(){
     return()=>window.removeEventListener("popstate",sync);
   },[slug]);
   useEffect(()=>{
-    let target="";
-    if(detail)target=`#/member/${slug(detail)}`;
-    else if(sel)target=`#/state/${sel.toLowerCase()}`;
-    if(window.location.hash!==target){
-      const newUrl=target?window.location.pathname+target:window.location.pathname;
-      window.history.pushState(null,"",newUrl);
+    let target="/";
+    if(showPress)target="/press";
+    else if(detail)target=`/member/${slug(detail)}`;
+    else if(sel)target=`/state/${sel.toLowerCase()}`;
+    if(window.location.pathname!==target){
+      window.history.pushState(null,"",target);
     }
-  },[detail,sel,slug]);
+  },[detail,sel,showPress,slug]);
+  const goHome=useCallback(()=>{setShowPress(false);setDetail(null);setSel(null);},[]);
 
   /* ═══════ ACCESSIBILITY: keyboard support for clickable divs ═══════ */
   const btn=useCallback(fn=>({role:"button",tabIndex:0,onClick:fn,
@@ -927,7 +941,7 @@ export default function App(){
     return l;
   },[allTrades,tradeAct,tradeSec,tradeQ]);
   const rangeLabel=n=>{const lo=n-1;if(lo>=1e6)return`$${(lo/1e6).toFixed(0)}M+`;if(lo>=1e3)return`$${(lo/1e3).toFixed(0)}K+`;return`$${lo}`;};
-  const shareMember=useCallback(m=>{const yr=m.y;const noGain=m.ew===m.cw;const partyState=`${m.p}-${m.s}`;const role=m.ch==="S"?"Sen.":"Rep.";let txt;if(noGain)txt=`${role} ${m.nm} (${partyState}) — Net worth: ${fmt(m.cw)}. Entered Congress ${yr}.`;else if(m.noPct)txt=`${role} ${m.nm} (${partyState}) — Net worth went from ${fmt(m.ew)} in ${yr} to ${fmt(m.cw)} now. Gain: ${fmt(m.gain)} over ${m.yrs}yr.`;else txt=`${role} ${m.nm} (${partyState}) — Net worth: ${fmt(m.ew)} (${yr}) → ${fmt(m.cw)} (now). ${m.pct>=0?"+":""}${m.pct.toFixed(0)}% over ${m.yrs}yr. S&P 500 same period: ${m.bench.toFixed(0)}%/yr.`;const url=`https://wealthincongress.com/#/member/${slug(m)}`;if(navigator.share){navigator.share({title:`${role} ${m.nm} — Wealth in Congress`,text:txt,url}).catch(()=>{});}else{const tweetUrl=`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(url)}`;window.open(tweetUrl,"_blank","noopener,noreferrer");}},[slug]);
+  const shareMember=useCallback(m=>{const yr=m.y;const noGain=m.ew===m.cw;const partyState=`${m.p}-${m.s}`;const role=m.ch==="S"?"Sen.":"Rep.";let txt;if(noGain)txt=`${role} ${m.nm} (${partyState}) — Net worth: ${fmt(m.cw)}. Entered Congress ${yr}.`;else if(m.noPct)txt=`${role} ${m.nm} (${partyState}) — Net worth went from ${fmt(m.ew)} in ${yr} to ${fmt(m.cw)} now. Gain: ${fmt(m.gain)} over ${m.yrs}yr.`;else txt=`${role} ${m.nm} (${partyState}) — Net worth: ${fmt(m.ew)} (${yr}) → ${fmt(m.cw)} (now). ${m.pct>=0?"+":""}${m.pct.toFixed(0)}% over ${m.yrs}yr. S&P 500 same period: ${m.bench.toFixed(0)}%/yr.`;const url=`https://wealthincongress.com/member/${slug(m)}`;if(navigator.share){navigator.share({title:`${role} ${m.nm} — Wealth in Congress`,text:txt,url}).catch(()=>{});}else{const tweetUrl=`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(url)}`;window.open(tweetUrl,"_blank","noopener,noreferrer");}},[slug]);
 
   const tab=a=>({padding:"5px 12px",fontSize:16,fontWeight:700,letterSpacing:".04em",textTransform:"uppercase",cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:a?`1px solid ${t.bgBtnA}`:`1px solid ${t.borderLt}`,fontFamily:"'IBM Plex Mono',ui-monospace,monospace"});
   const fb=a=>({padding:"3px 8px",fontSize:15,cursor:"pointer",borderRadius:4,background:a?t.bgBtnA:"transparent",color:a?t.textOnBtn:t.textBtnI,border:`1px solid ${a?t.bgBtnA:t.borderLt}`,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",fontWeight:700});
@@ -947,6 +961,54 @@ export default function App(){
     <div style={{minHeight:"100vh",background:t.bg,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",color:t.text,display:"flex",flexDirection:"column"}}>
       <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet"/>
       {detail&&<MemberDetail m={detail} onClose={()=>setDetail(null)} onCompare={toggleCmp} onShare={shareMember} comparing={cmpSet.has(detail.nm)}/>}
+      {showPress&&<div style={{position:"fixed",inset:0,zIndex:150,background:t.bg,overflowY:"auto"}}>
+        <div style={{maxWidth:760,margin:"0 auto",padding:mob?"24px 18px 60px":"40px 32px 80px"}}>
+          <div role="button" tabIndex={0} onClick={goHome} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();goHome();}}} style={{cursor:"pointer",fontSize:14,color:t.text3,marginBottom:16,fontWeight:700}}>← Back to site</div>
+          <div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:15,letterSpacing:".16em",textTransform:"uppercase",color:t.text3,marginBottom:6}}>For Reporters & Researchers</div>
+          <h1 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:mob?28:36,fontWeight:900,margin:"0 0 16px",color:t.heading,lineHeight:1.15}}>Press Kit</h1>
+          <p style={{fontSize:16,color:t.text2,lineHeight:1.65,marginBottom:24,maxWidth:620}}>Wealth in Congress is a free, nonpartisan civic accountability tool. The site, this press kit, and the underlying dataset are available for use without permission or attribution requirements, though attribution is appreciated.</p>
+
+          <h2 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:22,fontWeight:900,color:t.heading,marginTop:32,marginBottom:10}}>What it covers</h2>
+          <p style={{fontSize:16,color:t.text2,lineHeight:1.7,marginBottom:14}}>All 540 members of the 119th U.S. Congress (100 Senate, 440 House). For each member: net worth at entry to Congress vs. current net worth, annualized growth rate, S&P 500 benchmark comparison over the same period, committee assignments mapped to regulated industries, STOCK Act periodic transaction reports for 39 actively trading members, FEC campaign finance data for 511 members, outside earned income (Schedule C) for 223 members, and outside positions held (Schedule D) for 256 members.</p>
+
+          <h2 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:22,fontWeight:900,color:t.heading,marginTop:28,marginBottom:10}}>Headline findings</h2>
+          <ul style={{fontSize:16,color:t.text2,lineHeight:1.75,paddingLeft:22,marginBottom:14}}>
+            <li>About half of members with 2+ years in office match or beat the S&P 500 on an annualized basis.</li>
+            <li>The median veteran member roughly tracks the benchmark.</li>
+            <li>Both parties show comparable wealth growth patterns. Median annualized returns for Democrats and Republicans are within a few percentage points of each other.</li>
+            <li>Most congressional wealth accumulation comes from real estate, business interests, spousal income, and pre-existing wealth — not stock-picking.</li>
+            <li>Members with the longest tenures and highest entry wealth dominate the top of the wealthiest list. The freshman class skews toward outliers (high single-year percentage moves) due to short comparison windows.</li>
+          </ul>
+
+          <h2 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:22,fontWeight:900,color:t.heading,marginTop:28,marginBottom:10}}>Data downloads</h2>
+          <p style={{fontSize:16,color:t.text2,lineHeight:1.7,marginBottom:10}}>The full members dataset is available as CSV via the "Export CSV" button on the Leaderboard tab. Columns: Name, State, Chamber, Party, Year Entered, Entry Net Worth, Current Net Worth, Gain, Percent Change, Annualized Return, Source.</p>
+          <div role="button" tabIndex={0} onClick={()=>{exportCSV();}} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();exportCSV();}}} style={{display:"inline-block",cursor:"pointer",padding:"8px 16px",background:t.bench,color:"#fff",borderRadius:4,fontSize:15,fontWeight:700,marginTop:6}}>Download members CSV</div>
+
+          <h2 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:22,fontWeight:900,color:t.heading,marginTop:28,marginBottom:10}}>Methodology summary</h2>
+          <p style={{fontSize:16,color:t.text2,lineHeight:1.7,marginBottom:10}}>Net worth uses midpoint estimates from disclosure ranges (e.g. "$100,001-$250,000" recorded as $175,000). Assets reported as "Over $50,000,000" use $50M as a floor — the wealthiest members are systematically underestimated. Annualized returns use compound annual growth rate: (current/entry)^(1/years) - 1. Members with zero or negative entry net worth show dollar gains but percentage returns display as N/A. The S&P 500 benchmark uses total return index values matched to each member's entry year. Spousal assets included per standard financial disclosure methodology.</p>
+          <p style={{fontSize:16,color:t.text2,lineHeight:1.7,marginBottom:10}}>For full methodology, click "Methods" on any page of the site.</p>
+
+          <h2 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:22,fontWeight:900,color:t.heading,marginTop:28,marginBottom:10}}>Data sources</h2>
+          <ul style={{fontSize:16,color:t.text2,lineHeight:1.75,paddingLeft:22,marginBottom:14}}>
+            <li>U.S. Senate Electronic Financial Disclosure System (EFDS): <a href="https://efdsearch.senate.gov/search/" target="_blank" rel="noopener noreferrer" style={{color:t.bench}}>efdsearch.senate.gov</a></li>
+            <li>U.S. House of Representatives Clerk financial disclosures: <a href="https://disclosures-clerk.house.gov/FinancialDisclosure" target="_blank" rel="noopener noreferrer" style={{color:t.bench}}>disclosures-clerk.house.gov</a></li>
+            <li>Federal Election Commission campaign finance: <a href="https://www.fec.gov" target="_blank" rel="noopener noreferrer" style={{color:t.bench}}>fec.gov</a></li>
+            <li>U.S. Census Bureau TIGER/Line cartographic files (119th Congress districts)</li>
+            <li>Congressional Bioguide (member photographs)</li>
+          </ul>
+
+          <h2 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:22,fontWeight:900,color:t.heading,marginTop:28,marginBottom:10}}>Suggested attribution</h2>
+          <p style={{fontSize:16,color:t.text2,lineHeight:1.7,marginBottom:8,fontStyle:"italic",padding:"12px 16px",background:t.bgAlt,borderLeft:`3px solid ${t.bench}`,borderRadius:4}}>"Source: Wealth in Congress (wealthincongress.com), based on Senate EFDS and House Clerk financial disclosure filings."</p>
+          <p style={{fontSize:16,color:t.text2,lineHeight:1.7,marginBottom:14}}>Each member's profile page includes a "Primary Sources" section linking directly to their official disclosure filings. We strongly encourage citing primary sources alongside or instead of this site.</p>
+
+          <h2 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:22,fontWeight:900,color:t.heading,marginTop:28,marginBottom:10}}>Contact</h2>
+          <p style={{fontSize:16,color:t.text2,lineHeight:1.7,marginBottom:14}}>Questions, corrections, or data requests: <a href="mailto:wealthincongress@proton.me" style={{color:t.bench,fontWeight:700}}>wealthincongress@proton.me</a></p>
+          <p style={{fontSize:16,color:t.text2,lineHeight:1.7}}>𝕏: <a href="https://x.com/CongressWealth" target="_blank" rel="noopener noreferrer" style={{color:t.bench,fontWeight:700}}>@CongressWealth</a></p>
+
+          <h2 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:22,fontWeight:900,color:t.heading,marginTop:28,marginBottom:10}}>About</h2>
+          <p style={{fontSize:16,color:t.text2,lineHeight:1.7,marginBottom:14}}>Wealth in Congress is built and maintained independently. It is not affiliated with any political party, candidate, advocacy organization, or news outlet. The site has no advertising, no tracking, no login requirement, and no paywall. The underlying data was assembled from public filings without proprietary access or non-public sources.</p>
+        </div>
+      </div>}
       {showMethod&&(()=>{const S=[["Data Sources","Net worth figures parsed from Senate EFDS and House financial disclosure filings by an automated agent. Entry figures from earliest available filing; current from most recent (typically 2024). Asset holdings, STOCK Act transactions, and campaign finance data from EFDS, House Clerk, and FEC respectively."],["Net Worth","Disclosure forms report assets and liabilities in value ranges (e.g. $100,001-$250,000). We use midpoints. 'Over $50,000,000' uses $50M as a floor — the wealthiest members are underestimated."],["Gain Calculation","Members showing '--' have only one filing available, so no gain can be computed. Members with zero or negative entry net worth show dollar gains and salary-year equivalents, but percentage and annualized returns display as N/A since percentage change from zero or negative is undefined."],["Annualized Return","CAGR: (current/entry)^(1/years)-1. Normalizes for time in office so a 40-year veteran can be compared to a 4-year freshman."],["S&P Benchmark","What passive S&P 500 total return investing would have produced over the same period, using the member's entry year. Members above the benchmark outperformed the market."],["Market Comparison","About half of members with comparable data (2+ years in office) beat the S&P 500 on an annualized basis. The median veteran member roughly tracks the benchmark. Freshmen (1 year of data) almost universally 'beat' the benchmark due to the short comparison window — this is a data artifact, not evidence of trading skill. Most congressional wealth accumulation comes from sources other than stock picks — real estate, business interests, and spousal income. Both parties show comparable patterns."],["Asset Holdings","Sector-classified asset data available for 45 of the wealthiest members. Sectors assigned by ticker lookup (AAPL=Tech, JPM=Finance) or asset type (mutual funds=Diversified, real estate=RealEstate). Values based on disclosure range midpoints."],["STOCK Act Trades","Periodic Transaction Reports (PTRs) scraped from EFDS and House Clerk for 39 actively trading members, covering 2023-2025. Filing delay analysis available for senators only — the Senate EFDS system exposes filing dates; the House Clerk PDF system does not."],["Campaign Finance","FEC data for 511 members including total raised, PAC contributions, and top donor industries by sector. Used to identify triple overlap: committee jurisdiction + personal holdings + campaign donors in the same industry."],["Committee Overlap","Committee-sector risk mappings define which industries each committee regulates (e.g. Banking → Finance, RealEstate). 'Triple overlap' flags members where personal holdings, active trades, AND campaign donors all align with their committee's regulated industries."],["Salary-Years","Total gain ÷ $174,000 annual salary. Illustrative context only."],["Districts","119th Congress boundaries from U.S. Census Bureau TIGER/Line cartographic files. District party from Clerk of the House."],["Coverage","540 members of the 119th Congress (100 Senate + 440 House; NJ-11 vacant). 509 with gain data (entry ≠ current NW). 402 with calculable percentage returns (entry NW > $0). 45 with sector-tagged asset holdings. 39 with STOCK Act transaction data. 511 with FEC campaign finance data. 223 with outside income data. 256 with outside positions. Spousal assets are included per standard methodology."]];
         return(<div style={{position:"fixed",inset:0,zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",background:t.bgModalOv,backdropFilter:"blur(4px)"}} onClick={()=>setShowMethod(false)}><div style={{background:t.bgModal,border:`1px solid ${t.border}`,borderRadius:10,padding:"24px 28px",maxWidth:560,width:"92%",maxHeight:"85vh",overflowY:"auto",color:t.text}} onClick={e=>e.stopPropagation()}>
           <div style={{display:"flex",justifyContent:"space-between",marginBottom:16}}><div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:22,fontWeight:900,color:t.heading}}>Methodology</div><div onClick={()=>setShowMethod(false)} style={{cursor:"pointer",width:28,height:28,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:t.bgAlt,color:t.text2,fontSize:17,border:`1px solid ${t.border}`}}>×</div></div>
@@ -956,14 +1018,14 @@ export default function App(){
       {/* Header */}
       <div style={{borderBottom:`1px solid ${t.border}`,padding:mob?"8px 12px 6px":"10px 18px 8px",flexShrink:0}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:6}}>
-          <div>
+          <div role="button" tabIndex={0} onClick={goHome} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();goHome();}}} style={{cursor:"pointer",borderRadius:4}} aria-label="Home">
             {!mob&&<div style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:15,letterSpacing:".16em",textTransform:"uppercase",color:t.text3}}>Public Financial Disclosures</div>}
             <h1 style={{fontFamily:"'Playfair Display',Georgia,serif",fontSize:mob?16:20,fontWeight:900,margin:0,color:t.heading}}>Congressional Wealth Tracker</h1>
             {!mob&&<div style={{fontSize:15,color:t.text2,marginTop:3,maxWidth:520,lineHeight:1.55}}>Members of Congress from both parties enter public service and leave substantially wealthier. This tool tracks that pattern using public financial disclosures. It is not affiliated with any political party or advocacy organization.</div>}
-            {!mob&&<div style={{display:"flex",gap:12,marginTop:6,alignItems:"center"}}><a href="https://x.com/CongressWealth" target="_blank" rel="noopener" style={{display:"flex",alignItems:"center",gap:4,textDecoration:"none",color:t.text2,fontSize:15,fontWeight:700,padding:"3px 10px",borderRadius:4,border:`1px solid ${t.border}`,background:t.bgAlt}}>𝕏 <span style={{fontWeight:400}}>@CongressWealth</span></a><a href="mailto:wealthincongress@proton.me" style={{display:"flex",alignItems:"center",gap:4,textDecoration:"none",color:t.text2,fontSize:15,fontWeight:700,padding:"3px 10px",borderRadius:4,border:`1px solid ${t.border}`,background:t.bgAlt}}>✉ <span style={{fontWeight:400}}>Contact</span></a></div>}
           </div>
           <div style={{display:"flex",flexDirection:mob?"row":"column",alignItems:mob?"center":"flex-end",gap:4,flexWrap:"wrap"}}>
             {!mob&&<div style={{display:"flex",gap:10,flexWrap:"wrap"}}>{[[stats.n+" members",t.text2],[stats.nReal+" with gain data",t.text3],["Median +"+stats.median.toFixed(0)+"%",t.gain],[stats.aboveBenchPct+"% beat S&P",t.bench],["D +"+stats.medD.toFixed(0)+"%",t.dem],["R +"+stats.medR.toFixed(0)+"%",t.rep]].map(([v,c],i)=>(<div key={i} style={{fontSize:15,fontWeight:700,color:c}}>{v}</div>))}</div>}
+            {!mob&&<div style={{display:"flex",gap:8,alignItems:"center",marginTop:4}}><a href="https://x.com/CongressWealth" target="_blank" rel="noopener" style={{display:"flex",alignItems:"center",gap:4,textDecoration:"none",color:t.text2,fontSize:14,fontWeight:700,padding:"3px 10px",borderRadius:4,border:`1px solid ${t.border}`,background:t.bgAlt}}>𝕏 <span style={{fontWeight:400}}>@CongressWealth</span></a><a href="mailto:wealthincongress@proton.me" style={{display:"flex",alignItems:"center",gap:4,textDecoration:"none",color:t.text2,fontSize:14,fontWeight:700,padding:"3px 10px",borderRadius:4,border:`1px solid ${t.border}`,background:t.bgAlt}}>✉ <span style={{fontWeight:400}}>Contact</span></a><div role="button" tabIndex={0} onClick={()=>setShowPress(true)} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setShowPress(true);}}} style={{cursor:"pointer",display:"flex",alignItems:"center",gap:4,color:t.text2,fontSize:14,fontWeight:700,padding:"3px 10px",borderRadius:4,border:`1px solid ${t.border}`,background:t.bgAlt}}>Press kit</div></div>}
             <div style={{display:"flex",alignItems:"center",gap:8,marginTop:mob?6:8,fontSize:15,flexWrap:"wrap"}}>
               <label htmlFor="find-state" style={{color:t.text2,fontWeight:700}}>See your delegation:</label>
               <select id="find-state" value={sel||""} onChange={e=>{if(e.target.value){setSel(e.target.value);setView("map");}}} style={{background:t.bgInput,border:`1px solid ${t.borderIn}`,borderRadius:4,padding:"4px 8px",color:t.text,fontFamily:"'IBM Plex Mono',ui-monospace,monospace",fontSize:15,outline:"none",cursor:"pointer"}}>
@@ -1327,7 +1389,7 @@ export default function App(){
         )}
       </div>
       <footer className="wic-footer" style={{padding:"10px 16px",borderTop:`1px solid ${t.border}`,background:t.bgAlt,fontSize:13,color:t.text3,textAlign:"center",lineHeight:1.5}}>
-        Compiled April 2026 from the most recent available Senate EFDS and House Clerk financial disclosures, STOCK Act periodic transaction reports, and FEC filings. Methodology uses midpoint estimates of disclosed ranges. <a href="https://wealthincongress.com" style={{color:t.bench,textDecoration:"none"}}>wealthincongress.com</a>
+        Compiled April 2026 from the most recent available Senate EFDS and House Clerk financial disclosures, STOCK Act periodic transaction reports, and FEC filings. Methodology uses midpoint estimates of disclosed ranges. <a href="https://wealthincongress.com" style={{color:t.bench,textDecoration:"none"}}>wealthincongress.com</a> · <span role="button" tabIndex={0} onClick={()=>setShowPress(true)} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setShowPress(true);}}} style={{cursor:"pointer",color:t.bench,fontWeight:700}}>Press kit</span>
       </footer>
       <CompareBar members={cmpList} onRemove={m=>setCmpList(p=>p.filter(x=>x.nm!==m.nm))} onOpen={setDetail}/>
     </div>

@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    { "source": "/((?!api/|assets/|.*\\..*).*)", "destination": "/" }
+  ],
+  "headers": [
+    {
+      "source": "/api/og",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400" }
+      ]
+    }
+  ]
+}

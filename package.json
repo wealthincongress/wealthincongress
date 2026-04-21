@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/postbuild.js",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vercel/og": "^0.6.4",
     "d3": "^7.9.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
